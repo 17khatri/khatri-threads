@@ -1,0 +1,246 @@
+:root {
+  --background: #ffffff;
+  --black: #000000;
+  --muted: #4a4a4a;
+  --line: #e5e5e5;
+  --panel: #ffffff;
+  --primary: #ffb000;
+  --primary-strong: #e89d00;
+  --primary-light: #ffc64d;
+  --danger: #b42318;
+  --success: #087443;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-black: var(--black);
+
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-light: var(--primary-light);
+
+  --color-panel: var(--panel);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+}
+body {
+  background: var(--background);
+  color: var(--black);
+}
+
+button,
+a {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.wide-shell {
+  width: min(1440px, calc(100% - 28px));
+}
+
+.page-header,
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.page-header h1,
+.toolbar h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.toolbar h1 {
+  font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+.page-header > p {
+  max-width: 520px;
+}
+
+.eyebrow {
+  margin-bottom: 8px !important;
+  color: var(--primary) !important;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: 0 12px 35px rgb(27 39 66 / 8%);
+}
+
+.list-panel,
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button,
+.back-link,
+.item-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border-radius: 6px;
+  padding: 0 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary-button {
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background: var(--primary-strong);
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.danger-button {
+  border: 1px solid var(--danger, #dc2626);
+  background: var(--danger, #dc2626);
+  color: white;
+  cursor: pointer;
+  padding: 0 14px;
+  border-radius: 6px;
+}
+
+.danger-button:hover {
+  background: var(--danger-hover, #b91c1c);
+  border-color: var(--danger-hover, #b91c1c);
+}
+
+.danger-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary-button,
+.item-actions a {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--black);
+}
+
+.secondary-button:hover,
+.item-actions a:hover,
+.ghost-button:hover,
+.back-link:hover {
+  border-color: #a8b2c3;
+  background: #eef4ff;
+}
+
+.ghost-button,
+.back-link {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--primary);
+}
+
+.panel-heading,
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolbar-actions {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.category-list {
+  display: grid;
+  gap: 10px;
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.form-error,
+.form-success {
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-weight: 600;
+}
+
+.form-error {
+  background: #fff0ee;
+  color: var(--danger);
+}
+
+.form-success {
+  background: #ecfdf3;
+  color: var(--success);
+}
+
+.surface-message {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.surface-message.error {
+  color: var(--danger);
+}
+
+@media (max-width: 767px) {
+  .page-header,
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header,
+  .toolbar {
+    display: grid;
+    align-items: start;
+  }
+
+  .toolbar-actions,
+  .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .toolbar-actions > *,
+  .item-actions a {
+    width: 100%;
+  }
+}
+
+@import "tailwindcss";
