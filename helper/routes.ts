@@ -3,6 +3,7 @@ const ROUTES = {
   DASHBOARD: "/",
   CATEGORIES: "/categories",
   USERS: "/users",
+  COLLECTIONS: "/collections",
 
   // Authentication
   LOGIN: "/login",
@@ -25,6 +26,7 @@ export const PAGE_TITLES: Record<string, string> = {
   [ROUTES.FORGOT_PASSWORD]: "Forgot Password",
   [ROUTES.NOT_FOUND]: "Page Not Found",
   [ROUTES.USERS]: "Users",
+  [ROUTES.COLLECTIONS]: "Collections",
 };
 
 export default ROUTES;

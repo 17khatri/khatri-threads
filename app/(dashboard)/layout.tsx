@@ -15,9 +15,9 @@ export default async function RootLayout({
     redirect(ROUTES.LOGIN);
   }
 
-  return (
-    <DashboardShell initialUser={user}>
-      {children}
-    </DashboardShell>
-  );
+  if (user.role !== "ADMIN") {
+    redirect(ROUTES.DASHBOARD);
+  }
+
+  return <DashboardShell initialUser={user}>{children}</DashboardShell>;
 }

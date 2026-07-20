@@ -4,11 +4,19 @@ import { FiMenu, FiSearch, FiShoppingCart, FiUser, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
+import ROUTES from "@/helper/routes";
 
 export default function StorefrontHeader() {
   const [isMenuMounted, setIsMenuMounted] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const closeTimer = useRef<number | null>(null);
+  const router = useRouter();
+
+  const navigateToCollections = () => {
+    router.push(ROUTES.COLLECTIONS);
+    closeMenu();
+  };
 
   useEffect(() => {
     return () => {
@@ -37,8 +45,8 @@ export default function StorefrontHeader() {
           >
             Khatri Threads
           </Link>
-          <nav className="flex items-center gap-5 text-sm text-slate-700 lg:gap-6">
-            <a href="#collection" className="hover:text-primary">
+          <nav className="flex items-center cursor-pointer gap-5 text-sm text-slate-700 lg:gap-6">
+            <a onClick={navigateToCollections} className="hover:text-primary">
               Shop
             </a>
             <a href="#about" className="hover:text-primary">
@@ -60,7 +68,7 @@ export default function StorefrontHeader() {
           <button
             type="button"
             aria-label="Search products"
-            className="hover:text-primary"
+            className="hover:text-primary cursor-pointer"
           >
             <FiSearch size={20} />
           </button>
@@ -77,21 +85,21 @@ export default function StorefrontHeader() {
           <button
             type="button"
             aria-label="Search products"
-            className="hidden hover:text-primary md:block"
+            className="hidden hover:text-primary md:block cursor-pointer"
           >
             <FiSearch size={20} />
           </button>
           <Link
             href="/login"
             aria-label="Account"
-            className="hover:text-primary"
+            className="hover:text-primary cursor-pointer"
           >
             <FiUser size={20} />
           </Link>
           <button
             type="button"
             aria-label="Shopping bag, 1 item"
-            className="relative hover:text-primary"
+            className="relative hover:text-primary cursor-pointer"
           >
             <FiShoppingCart size={21} />
           </button>
@@ -126,18 +134,18 @@ export default function StorefrontHeader() {
                   <FiX size={22} />
                 </button>
               </div>
-              <nav className="mt-12 flex flex-col border-t border-slate-100">
+              <nav className="mt-12 flex flex-col  border-slate-100">
                 <a
                   href="#collection"
-                  onClick={closeMenu}
-                  className="border-b border-slate-100 py-5 text-lg font-medium"
+                  onClick={navigateToCollections}
+                  className="py-5 text-lg font-medium"
                 >
                   Shop
                 </a>
                 <a
                   href="#about"
                   onClick={closeMenu}
-                  className="border-b border-slate-100 py-5 text-lg font-medium"
+                  className="py-5 text-lg font-medium"
                 >
                   Contact
                 </a>

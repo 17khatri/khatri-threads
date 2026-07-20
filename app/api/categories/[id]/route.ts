@@ -1,11 +1,29 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth/auth";
 import { Prisma } from "@prisma/client";
+
+async function getAdminError() {
+    const user = await getCurrentUser();
+
+    if (!user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    return null;
+}
 
 export async function PUT(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const adminError = await getAdminError();
+    if (adminError) return adminError;
+
     const { id } = await params;
     const body = await req.json();
     const name = String(body.name || "").trim();
@@ -48,6 +66,9 @@ export async function DELETE(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const adminError = await getAdminError();
+    if (adminError) return adminError;
+
     const { id } = await params;
 
     await prisma.category.delete({

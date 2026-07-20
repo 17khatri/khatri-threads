@@ -1,7 +1,10 @@
+"use client";
+
 import Button from "@/app/components/button";
-import StorefrontHeader from "@/app/components/storefront/storefront-header";
-import logo from "../public/logo.jpeg";
+import logo from "../../public/logo.jpeg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import ROUTES from "@/helper/routes";
 
 const collections = [
   {
@@ -31,14 +34,13 @@ const collections = [
 ];
 
 export default function Page() {
+  const router = useRouter();
+
+  const navigateToCollections = () => {
+    router.push(ROUTES.COLLECTIONS);
+  };
   return (
     <main className="min-h-screen bg-white text-black">
-      <div className="sticky top-0 z-40 border-b border-black/10 bg-white/95 backdrop-blur">
-        <div className="wide-shell mx-auto">
-          <StorefrontHeader />
-        </div>
-      </div>
-
       <section>
         <div className="grid overflow-hidden md:grid-cols-[2fr_3fr]">
           <div className="relative hidden bg-white md:flex md:items-center md:justify-center">
@@ -63,7 +65,10 @@ export default function Page() {
                 confidence, and effortless style.
               </p>
               <div className="mt-5">
-                <Button href="#collection" className="rounded-none px-7 py-2">
+                <Button
+                  onClick={navigateToCollections}
+                  className="rounded-none px-7 py-2"
+                >
                   Shop now
                 </Button>
               </div>
@@ -80,7 +85,10 @@ export default function Page() {
                 Shop by Mood
               </p>
 
-              <span className="text-sm font-semibold text-black/60 sm:hidden">
+              <span
+                onClick={navigateToCollections}
+                className="text-sm font-semibold cursor-pointer text-black/60 sm:hidden"
+              >
                 View All
               </span>
             </div>
@@ -90,7 +98,10 @@ export default function Page() {
                 Find your next favourite
               </h2>
 
-              <span className="hidden text-sm font-semibold text-black/60 sm:block">
+              <span
+                onClick={navigateToCollections}
+                className="hidden cursor-pointer text-sm font-semibold text-black/60 sm:block"
+              >
                 View All
               </span>
             </div>
@@ -117,15 +128,6 @@ export default function Page() {
             ))}
           </div>
         </div>
-      </section>
-
-      <section
-        id="about"
-        className="wide-shell mx-auto py-20 text-center sm:py-24"
-      >
-        <p className="mx-auto max-w-2xl text-2xl font-medium leading-relaxed text-black sm:text-3xl">
-          Timeless style begins with quality you can feel.
-        </p>
       </section>
     </main>
   );

@@ -15,7 +15,6 @@ export const config = {
   ],
 };
 
-const PUBLIC_ROUTES = ["/login", "/register", "/forgot-password"];
 const PUBLIC_API_ROUTES = [
   "/api/auth/login",
   "/api/auth/register",
@@ -25,6 +24,10 @@ const PUBLIC_API_ROUTES = [
 ];
 
 const ADMIN_ROUTES = ["/users", "/categories"];
+
+function matchesRoute(pathname: string, route: string) {
+  return pathname === route || pathname.startsWith(`${route}/`);
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -50,48 +53,39 @@ export async function proxy(request: NextRequest) {
   const isAdmin = userPayload?.role === "ADMIN";
 
   const isApiRoute = pathname.startsWith("/api");
-  // The home page is available to everyone. Keep the exact-match check separate
-  // so that "/" does not accidentally make every route public.
-  const isHomeRoute = pathname === "/";
-  const isAuthRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
-  const isPublicRoute = isHomeRoute || isAuthRoute;
-  const isAdminRoute = ADMIN_ROUTES.some((route) => pathname.startsWith(route));
+  const isAdminRoute = ADMIN_ROUTES.some((route) =>
+    matchesRoute(pathname, route),
+  );
 
   // 3. Handle APIs
   if (isApiRoute) {
-    if (!isAuthenticated) {
+    const isAdminApi =
+      matchesRoute(pathname, "/api/users") ||
+      matchesRoute(pathname, "/api/categories");
+
+    if (isAdminApi && !isAuthenticated) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    // Protect Admin APIs
-    const isAdminApi =
-      pathname.startsWith("/api/users") ||
-      (pathname.startsWith("/api/categories") &&
-        ["POST", "PUT", "DELETE"].includes(request.method));
 
     if (isAdminApi && !isAdmin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    return NextResponse.next();
-  }
-
-  // 4. Handle Frontend routes
-  if (!isAuthenticated) {
-    // If not authenticated and trying to access a protected route, redirect to login
-    if (!isPublicRoute) {
-      return NextResponse.redirect(new URL("/login", request.url));
+    // Private authentication endpoints, such as logout and current-user lookup,
+    // still require a valid session. All storefront APIs remain public by default.
+    if (pathname.startsWith("/api/auth") && !isAuthenticated) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
     return NextResponse.next();
   }
 
-  // If authenticated:
-  // - Redirect away from public auth pages to dashboard
-  if (isAuthRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
+  // 4. Storefront and authentication pages are public. Only admin pages
+  // require a session and an ADMIN role.
+  if (isAdminRoute && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // - Restrict admin-only pages to ADMIN users
   if (isAdminRoute && !isAdmin) {
     return NextResponse.redirect(new URL("/", request.url));
   }

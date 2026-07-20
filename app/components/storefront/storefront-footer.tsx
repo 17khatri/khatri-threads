@@ -7,7 +7,7 @@ const socialLinks = [
 
 export default function StorefrontFooter() {
   return (
-    <footer className="px-3 sm:px-7">
+    <footer className="px-3 mt-12 sm:px-7">
       <div className="flex min-h-16 items-center justify-between gap-4 border-t border-black/10 py-4 text-sm text-black/55">
         <p>© 2026 Khatri Threads. All rights reserved.</p>
         <nav

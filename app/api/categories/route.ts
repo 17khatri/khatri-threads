@@ -1,8 +1,26 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth/auth";
 import { Prisma } from "@prisma/client";
 
+async function getAdminError() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  return null;
+}
+
 export async function GET() {
+  const adminError = await getAdminError();
+  if (adminError) return adminError;
+
   const categories = await prisma.category.findMany({
     orderBy: {
       name: "asc",
@@ -13,6 +31,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const adminError = await getAdminError();
+  if (adminError) return adminError;
+
   const body = await req.json();
   const name = String(body.name || "").trim();
   if (!name) {
