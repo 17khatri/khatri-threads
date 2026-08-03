@@ -1,4 +1,5 @@
 import StorefrontHeader from "@/app/components/storefront/storefront-header";
+import StorefrontFooter from "@/app/components/storefront/storefront-footer";
 
 export default function StorefrontLayout({
   children,
@@ -13,6 +14,7 @@ export default function StorefrontLayout({
         </div>
       </div>
       {children}
+      <StorefrontFooter />
     </>
   );
 }
