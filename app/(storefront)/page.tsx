@@ -3,35 +3,10 @@
 import Button from "@/app/components/button";
 import logo from "../../public/logo.jpeg";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ROUTES from "@/helper/routes";
-
-const collections = [
-  {
-    name: "Textured Knit Cardigan",
-    price: "2,850",
-    image:
-      "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=900&q=85",
-  },
-  {
-    name: "Classic Turtleneck Top",
-    price: "1,490",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85",
-  },
-  {
-    name: "Soft Wool Pullover",
-    price: "2,330",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=85",
-  },
-  {
-    name: "Striped Everyday Tee",
-    price: "760",
-    image:
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=85",
-  },
-];
+import { products } from "@/app/data/products";
 
 export default function Page() {
   const router = useRouter();
@@ -81,7 +56,7 @@ export default function Page() {
         <div className="wide-shell mx-auto">
           <div className="mb-10">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary-strong">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
                 Shop by Mood
               </p>
 
@@ -107,8 +82,12 @@ export default function Page() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 md:grid-cols-4">
-            {collections.map((collection) => (
-              <article key={collection.name} className="group cursor-pointer">
+            {products.map((collection) => (
+              <Link
+                key={collection.slug}
+                href={`/products/${collection.slug}`}
+                className="group block"
+              >
                 <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
                   <Image
                     src={collection.image}
@@ -124,7 +103,7 @@ export default function Page() {
                 <p className="mt-1 text-sm font-semibold text-black">
                   &#8377; {collection.price}
                 </p>
-              </article>
+              </Link>
             ))}
           </div>
         </div>

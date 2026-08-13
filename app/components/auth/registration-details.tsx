@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { FiCheckCircle, FiCircle, FiEye, FiEyeOff, FiLock, FiPhone, FiUser } from "react-icons/fi";
+import {
+  FiCheckCircle,
+  FiCircle,
+  FiEye,
+  FiEyeOff,
+  FiLock,
+  FiPhone,
+  FiUser,
+} from "react-icons/fi";
 import Button from "@/app/components/button";
 import { FormField, Input } from "@/app/components/form-fields";
 import type { RegistrationDetailsValues } from "@/lib/validators/registration";
@@ -40,11 +48,14 @@ export function RegistrationDetails({
     },
   ];
   const passwordsMatch =
-    Boolean(password) && Boolean(confirmPassword) && password === confirmPassword;
+    Boolean(password) &&
+    Boolean(confirmPassword) &&
+    password === confirmPassword;
   const completedRequirements = passwordRequirements.filter(
-    (requirement) => requirement.isMet,
+    (requirement) => requirement.isMet
   ).length;
-  const hasStrongPassword = completedRequirements === passwordRequirements.length;
+  const hasStrongPassword =
+    completedRequirements === passwordRequirements.length;
 
   return (
     <form className="space-y-5" onSubmit={onSubmit}>
@@ -213,7 +224,9 @@ export function RegistrationDetails({
             </div>
             <span
               className={`rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${
-                hasStrongPassword ? "bg-success/10 text-success" : "bg-primary/15 text-primary-strong"
+                hasStrongPassword
+                  ? "bg-success/10 text-success"
+                  : "bg-primary/15 text-primary"
               }`}
             >
               {completedRequirements}/{passwordRequirements.length}
@@ -240,9 +253,17 @@ export function RegistrationDetails({
                 }`}
               >
                 {requirement.isMet ? (
-                  <FiCheckCircle aria-hidden="true" size={17} className="shrink-0" />
+                  <FiCheckCircle
+                    aria-hidden="true"
+                    size={17}
+                    className="shrink-0"
+                  />
                 ) : (
-                  <FiCircle aria-hidden="true" size={17} className="shrink-0 text-primary" />
+                  <FiCircle
+                    aria-hidden="true"
+                    size={17}
+                    className="shrink-0 text-primary"
+                  />
                 )}
                 {requirement.label}
               </li>
@@ -253,9 +274,17 @@ export function RegistrationDetails({
               }`}
             >
               {passwordsMatch ? (
-                <FiCheckCircle aria-hidden="true" size={17} className="shrink-0" />
+                <FiCheckCircle
+                  aria-hidden="true"
+                  size={17}
+                  className="shrink-0"
+                />
               ) : (
-                <FiCircle aria-hidden="true" size={17} className="shrink-0 text-primary" />
+                <FiCircle
+                  aria-hidden="true"
+                  size={17}
+                  className="shrink-0 text-primary"
+                />
               )}
               Passwords match
             </li>

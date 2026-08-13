@@ -4,6 +4,8 @@ const ROUTES = {
   CATEGORIES: "/categories",
   USERS: "/users",
   COLLECTIONS: "/collections",
+  ADMIN_COLLECTIONS: "/admin/collections",
+  PRODUCTS: "/admin/products",
 
   // Authentication
   LOGIN: "/login",
@@ -27,6 +29,8 @@ export const PAGE_TITLES: Record<string, string> = {
   [ROUTES.NOT_FOUND]: "Page Not Found",
   [ROUTES.USERS]: "Users",
   [ROUTES.COLLECTIONS]: "Collections",
+  [ROUTES.ADMIN_COLLECTIONS]: "Collections",
+  [ROUTES.PRODUCTS]: "Products",
 };
 
 export default ROUTES;

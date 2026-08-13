@@ -3,6 +3,14 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth/auth";
 import { Prisma } from "@prisma/client";
 
+function toSlug(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 async function getAdminError() {
   const user = await getCurrentUser();
 
@@ -36,6 +44,7 @@ export async function POST(req: Request) {
 
   const body = await req.json();
   const name = String(body.name || "").trim();
+  const slug = toSlug(name);
   if (!name) {
     return NextResponse.json(
       { error: "Category name is required." },
@@ -47,6 +56,7 @@ export async function POST(req: Request) {
     const category = await prisma.category.create({
       data: {
         name,
+        slug,
       },
     });
 
