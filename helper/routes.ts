@@ -1,8 +1,9 @@
 const ROUTES = {
   // Dashboard
   DASHBOARD: "/",
-  CATEGORIES: "/categories",
-  USERS: "/users",
+  ADMIN_DASHBOARD: "/admin/dashboard",
+  CATEGORIES: "/admin/categories",
+  USERS: "/admin/users",
   COLLECTIONS: "/collections",
   ADMIN_COLLECTIONS: "/admin/collections",
   PRODUCTS: "/admin/products",
@@ -21,6 +22,7 @@ const ROUTES = {
 
 export const PAGE_TITLES: Record<string, string> = {
   [ROUTES.DASHBOARD]: "Dashboard",
+  [ROUTES.ADMIN_DASHBOARD]: "Dashboard",
   [ROUTES.CATEGORIES]: "Categories",
   [ROUTES.PROFILE]: "Profile",
   [ROUTES.LOGIN]: "Login",

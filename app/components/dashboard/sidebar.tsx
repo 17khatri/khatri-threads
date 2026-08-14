@@ -54,10 +54,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         <nav className="p-4 space-y-2 h-full overflow-auto">
           <Link
-            href={ROUTES.DASHBOARD}
+            href={ROUTES.ADMIN_DASHBOARD}
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-full transition-colors duration-300 ${
-              pathname === ROUTES.DASHBOARD
+              pathname === ROUTES.ADMIN_DASHBOARD
                 ? "bg-primary/60"
                 : "hover:bg-primary/60"
             }`}
