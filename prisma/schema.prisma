@@ -40,14 +40,82 @@ model EmailOtp {
 model Category {
   id String @id @default(cuid())
 
-  name String @unique
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean @default(true)
+  sortOrder   Int     @default(0)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Collection {
+  id String @id @default(cuid())
+
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean @default(true)
+  sortOrder   Int     @default(0)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id String @id @default(cuid())
+
+  name        String
+  slug        String   @unique
+  sku         String?  @unique
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  status      ProductStatus @default(DRAFT)
+  isFeatured  Boolean  @default(false)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+
+  images ProductImage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Retains the existing category table and its data while removing the
-  // PDF-specific name from the application code.
-  @@map("PdfFormCategory")
+  @@index([categoryId])
+  @@index([collectionId])
+  @@index([status])
+}
+
+model ProductImage {
+  id String @id @default(cuid())
+
+  url       String
+  altText   String?
+  sortOrder Int    @default(0)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
 }
 
 enum Role {
