@@ -95,7 +95,7 @@ export async function POST(request: Request) {
       throw error;
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: otp });
   } catch (error) {
     console.error("Send OTP failed", error);
     return NextResponse.json(
