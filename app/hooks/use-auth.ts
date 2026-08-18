@@ -34,7 +34,11 @@ export function useAuth() {
         throw new Error(data.error);
       }
       setUser(data.user);
-      router.push(ROUTES.DASHBOARD);
+      router.push(
+        data.user.role === "ADMIN"
+          ? ROUTES.ADMIN_DASHBOARD
+          : ROUTES.DASHBOARD
+      );
 
       return data.user;
     } finally {

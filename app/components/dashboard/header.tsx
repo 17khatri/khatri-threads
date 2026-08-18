@@ -12,9 +12,7 @@ interface HeaderProps {
 export default function Header({ onMenuClick }: HeaderProps) {
   const pathname = usePathname();
 
-  const basePath = pathname === "/" ? "/" : `/${pathname.split("/")[1]}`;
-
-  const title = PAGE_TITLES[basePath] ?? "Dashboard";
+  const title = PAGE_TITLES[pathname] ?? "Dashboard";
 
   return (
     <header className="bg-white sticky top-4 border mb-5 border-line rounded-2xl xl:rounded-3xl px-6 py-5 flex items-center justify-between z-9">
