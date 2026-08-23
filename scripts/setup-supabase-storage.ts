@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const bucket = process.env.SUPABASE_STORAGE_BUCKET?.trim() || "pdf-forms";
+const bucket = process.env.SUPABASE_PRODUCT_IMAGE_BUCKET?.trim() || "Tshirt";
 
 async function main() {
   const supabase = createSupabaseServerClient();
@@ -17,8 +17,9 @@ async function main() {
   }
 
   const { error: createError } = await supabase.storage.createBucket(bucket, {
-    public: false,
-    allowedMimeTypes: ["application/pdf"],
+    public: true,
+    fileSizeLimit: "10MB",
+    allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
   });
 
   if (createError) {
