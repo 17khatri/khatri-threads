@@ -219,6 +219,40 @@ a {
   color: var(--danger);
 }
 
+.product-modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) #f3f4f6;
+}
+
+.product-modal-scrollbar::-webkit-scrollbar {
+  width: 9px;
+}
+
+.product-modal-scrollbar::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: #f3f4f6;
+}
+
+.product-modal-scrollbar::-webkit-scrollbar-thumb {
+  border: 2px solid #f3f4f6;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.product-modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-strong);
+}
+
+@media (min-width: 1024px) {
+  .product-modal-scrollbar form > div:first-child {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .product-modal-scrollbar fieldset > div:last-child {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 767px) {
   .page-header,
   .toolbar {

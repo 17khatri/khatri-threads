@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { FiX } from "react-icons/fi";
+import { cn } from "@/lib/utils";
 import { H2 } from "./typography";
 
 interface ModalProps {
@@ -9,15 +10,32 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   onClose: () => void;
+  className?: string;
+  bodyClassName?: string;
 }
 
-export function Modal({ open, title, children, onClose }: ModalProps) {
+export function Modal({
+  open,
+  title,
+  children,
+  onClose,
+  className,
+  bodyClassName,
+}: ModalProps) {
   if (!open) return null;
+  const isProductModal = title === "Add Product" || title === "Edit Product";
 
   return (
     <div className="fixed px-4 overflow-auto py-5 inset-0 z-50 flex justify-center bg-black/40">
-      <div className="w-full max-w-lg h-fit rounded-xl bg-white shadow-xl px-4 py-5 m-auto">
-        <div className="flex items-center justify-between">
+      <div
+        className={cn(
+          "m-auto w-full max-w-lg rounded-xl bg-white px-4 py-5 shadow-xl",
+          isProductModal &&
+            "product-modal flex h-[min(820px,calc(100dvh-2.5rem))] max-w-5xl flex-col",
+          className
+        )}
+      >
+        <div className="flex shrink-0 items-center justify-between">
           <H2 className="text-lg font-bold">{title}</H2>
 
           <button
@@ -29,7 +47,16 @@ export function Modal({ open, title, children, onClose }: ModalProps) {
           </button>
         </div>
 
-        <div className="mt-4">{children}</div>
+        <div
+          className={cn(
+            "mt-4",
+            isProductModal &&
+              "product-modal-scrollbar min-h-0 flex-1 overflow-y-auto pr-3",
+            bodyClassName
+          )}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

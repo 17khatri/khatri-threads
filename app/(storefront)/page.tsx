@@ -5,15 +5,35 @@ import logo from "../../public/logo.jpeg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import ROUTES from "@/helper/routes";
-import { products } from "@/app/data/products";
+
+type StorefrontProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  price: string;
+  categoryId: string;
+  images: { id: string; categoryId: string; url: string; altText: string | null }[];
+};
 
 export default function Page() {
   const router = useRouter();
+  const [products, setProducts] = useState<StorefrontProduct[]>([]);
 
   const navigateToCollections = () => {
     router.push(ROUTES.COLLECTIONS);
   };
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const response = await fetch("/api/storefront/products?featured=true", {
+        cache: "no-store",
+      });
+      if (response.ok) setProducts(await response.json());
+    };
+    void loadProducts();
+  }, []);
   return (
     <main className="min-h-screen bg-white text-black">
       <section>
@@ -82,29 +102,36 @@ export default function Page() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 md:grid-cols-4">
-            {products.map((collection) => (
+            {products.map((product) => {
+              const image =
+                product.images.find(
+                  (item) => item.categoryId === product.categoryId
+                ) ?? product.images[0];
+
+              return (
               <Link
-                key={collection.slug}
-                href={`/products/${collection.slug}`}
+                key={product.id}
+                href={`/products/${product.slug}`}
                 className="group block"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
-                  <Image
-                    src={collection.image}
-                    alt={collection.name}
-                    fill
-                    sizes="(max-width: 639px) 50vw, (max-width: 767px) 50vw, 25vw"
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                  />
+                  {image && (
+                    <img
+                      src={image.url}
+                      alt={image.altText || product.name}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
+                  )}
                 </div>
                 <h3 className="mt-3 text-sm font-medium leading-5 sm:text-base">
-                  {collection.name}
+                  {product.name}
                 </h3>
                 <p className="mt-1 text-sm font-semibold text-black">
-                  &#8377; {collection.price}
+                  ₹ {Number(product.price).toLocaleString("en-IN")}
                 </p>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

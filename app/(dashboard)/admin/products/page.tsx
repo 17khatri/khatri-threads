@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
+import { ChangeEvent, useEffect, useState } from "react";
+import { FiEdit2, FiPlus, FiTrash2, FiUpload, FiX } from "react-icons/fi";
 import Button from "@/app/components/button";
 import { Modal } from "@/app/components/modal";
 import {
@@ -10,9 +10,14 @@ import {
   Input,
   Textarea,
 } from "@/app/components/form-fields";
-import { H2, H3, P } from "@/app/components/typography";
+import { H3, P } from "@/app/components/typography";
 
 type Master = { id: string; name: string };
+type ProductImage = {
+  categoryId: string;
+  url: string;
+  storagePath: string | null;
+};
 type Product = {
   id: string;
   name: string;
@@ -25,24 +30,40 @@ type Product = {
   collectionId: string | null;
   category: Master;
   collection: Master | null;
-  images: { url: string }[];
+  categories: { categoryId: string; isDefault: boolean; category: Master }[];
+  images: ProductImage[];
 };
-const blank = {
+type ProductForm = {
+  name: string;
+  sku: string;
+  price: string;
+  description: string;
+  collectionId: string;
+  status: Product["status"];
+  isFeatured: boolean;
+  categoryIds: string[];
+  defaultCategoryId: string;
+  images: ProductImage[];
+};
+const blank: ProductForm = {
   name: "",
   sku: "",
   price: "",
   description: "",
-  categoryId: "",
   collectionId: "",
   status: "DRAFT",
   isFeatured: false,
-  images: "",
+  categoryIds: [],
+  defaultCategoryId: "",
+  images: [],
 };
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Master[]>([]);
   const [collections, setCollections] = useState<Master[]>([]);
-  const [form, setForm] = useState(blank);
+  const [form, setForm] = useState<ProductForm>(blank);
+  const [files, setFiles] = useState<Record<string, File[]>>({});
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -62,50 +83,144 @@ export default function ProductsPage() {
     const timer = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(timer);
   }, []);
-  const change = (key: keyof typeof blank, value: string | boolean) =>
+  const change = <K extends keyof ProductForm>(key: K, value: ProductForm[K]) =>
     setForm((current) => ({ ...current, [key]: value }));
   const openCreate = () => {
     setEditing(null);
     setForm(blank);
+    setFiles({});
     setError("");
     setOpen(true);
   };
   const openEdit = (product: Product) => {
     setEditing(product);
+    setFiles({});
     setForm({
       name: product.name,
       sku: product.sku ?? "",
       price: product.price,
       description: product.description ?? "",
-      categoryId: product.categoryId,
       collectionId: product.collectionId ?? "",
       status: product.status,
       isFeatured: product.isFeatured,
-      images: product.images.map((image) => image.url).join("\n"),
+      categoryIds: product.categories.map((item) => item.categoryId),
+      defaultCategoryId: product.categoryId,
+      images: product.images,
     });
     setError("");
     setOpen(true);
+  };
+  const setCategory = (categoryId: string, checked: boolean) =>
+    setForm((current) => {
+      const categoryIds = checked
+        ? [...current.categoryIds, categoryId]
+        : current.categoryIds.filter((id) => id !== categoryId);
+      const defaultCategoryId = checked
+        ? current.defaultCategoryId || categoryId
+        : current.defaultCategoryId === categoryId
+        ? categoryIds[0] || ""
+        : current.defaultCategoryId;
+      return {
+        ...current,
+        categoryIds,
+        defaultCategoryId,
+        images: checked
+          ? current.images
+          : current.images.filter((image) => image.categoryId !== categoryId),
+      };
+    });
+  const chooseFiles = (
+    categoryId: string,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const selected = Array.from(event.target.files ?? []);
+    if (selected.length)
+      setFiles((current) => ({
+        ...current,
+        [categoryId]: [...(current[categoryId] ?? []), ...selected],
+      }));
+    event.target.value = "";
+  };
+  const removeImage = (categoryId: string, index: number) =>
+    setForm((current) => ({
+      ...current,
+      images: current.images.filter(
+        (image, imageIndex) =>
+          !(
+            image.categoryId === categoryId &&
+            current.images.filter(
+              (entry, entryIndex) =>
+                entryIndex < imageIndex && entry.categoryId === categoryId
+            ).length === index
+          )
+      ),
+    }));
+  const removeNewFile = (categoryId: string, index: number) =>
+    setFiles((current) => ({
+      ...current,
+      [categoryId]: (current[categoryId] ?? []).filter(
+        (_, fileIndex) => fileIndex !== index
+      ),
+    }));
+  const uploadFiles = async () => {
+    const newImages: ProductImage[] = [];
+    for (const [categoryId, categoryFiles] of Object.entries(files)) {
+      if (!categoryFiles.length) continue;
+      const payload = new FormData();
+      categoryFiles.forEach((file) => payload.append("images", file));
+      const response = await fetch("/api/admin/product-images", {
+        method: "POST",
+        body: payload,
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Image upload failed.");
+      newImages.push(
+        ...data.images.map((image: Omit<ProductImage, "categoryId">) => ({
+          ...image,
+          categoryId,
+        }))
+      );
+    }
+    return newImages;
   };
   const save = async (event: React.FormEvent) => {
     event.preventDefault();
     setSaving(true);
     setError("");
-    const response = await fetch(
-      editing ? `/api/products/${editing.id}` : "/api/products",
-      {
-        method: editing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, images: form.images.split("\n") }),
-      }
-    );
-    const data = await response.json();
-    setSaving(false);
-    if (!response.ok) return setError(data.error);
-    setOpen(false);
-    void load();
+    try {
+      const uploaded = await uploadFiles();
+      const images = [...form.images, ...uploaded];
+      if (
+        form.categoryIds.some(
+          (categoryId) =>
+            !images.some((image) => image.categoryId === categoryId)
+        )
+      )
+        throw new Error(
+          "Upload at least one image for every selected category."
+        );
+      const response = await fetch(
+        editing ? `/api/products/${editing.id}` : "/api/products",
+        {
+          method: editing ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, images }),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      setOpen(false);
+      void load();
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Unable to save product."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
   const remove = async (id: string) => {
-    if (!confirm("Delete this product?")) return;
+    if (!confirm("Delete this product and its images?")) return;
     const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
     if (!response.ok) return setError((await response.json()).error);
     void load();
@@ -114,9 +229,9 @@ export default function ProductsPage() {
     <div className="panel list-panel">
       <div className="panel-heading">
         <div>
-          <H2 className="mb-2">Products</H2>
           <P>
-            Add products, prices, images, categories, and optional collections.
+            Create one design, assign one or more categories, and upload
+            category-specific images.
           </P>
         </div>
         <Button onClick={openCreate}>
@@ -125,7 +240,7 @@ export default function ProductsPage() {
       </div>
       {error && <p className="form-error">{error}</p>}
       <div className="overflow-x-auto">
-        <div className="min-w-[700px] divide-y divide-line">
+        <div className="min-w-[720px] divide-y divide-line">
           {products.length ? (
             products.map((product) => (
               <article
@@ -135,13 +250,15 @@ export default function ProductsPage() {
                 <div>
                   <H3>{product.name}</H3>
                   <p className="mt-1 text-sm text-black/60">
-                    {product.sku ? `SKU: ${product.sku}` : "No SKU"}
+                    {product.categories
+                      .map((item) => item.category.name)
+                      .join(", ")}
                   </p>
                 </div>
                 <p className="text-sm">
                   ₹ {Number(product.price).toLocaleString("en-IN")}
                 </p>
-                <p className="text-sm">{product.category.name}</p>
+                <p className="text-sm">Default: {product.category.name}</p>
                 <p className="text-sm">
                   <span className="rounded-full bg-black/5 px-3 py-1">
                     {product.status}
@@ -173,19 +290,19 @@ export default function ProductsPage() {
         title={editing ? "Edit Product" : "Add Product"}
         onClose={() => setOpen(false)}
       >
-        <form onSubmit={save} className="grid gap-3">
+        <form onSubmit={save} className="grid gap-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <FormField label="Product Name" required>
+            <FormField label="Product Design Name" required>
               <Input
                 value={form.name}
-                onChange={(e) => change("name", e.target.value)}
+                onChange={(event) => change("name", event.target.value)}
                 required
               />
             </FormField>
             <FormField label="SKU">
               <Input
                 value={form.sku}
-                onChange={(e) => change("sku", e.target.value)}
+                onChange={(event) => change("sku", event.target.value)}
               />
             </FormField>
             <FormField label="Price (₹)" required>
@@ -194,30 +311,15 @@ export default function ProductsPage() {
                 min="0"
                 step="0.01"
                 value={form.price}
-                onChange={(e) => change("price", e.target.value)}
+                onChange={(event) => change("price", event.target.value)}
                 required
               />
-            </FormField>
-            <FormField label="Category" required>
-              <select
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3"
-                value={form.categoryId}
-                onChange={(e) => change("categoryId", e.target.value)}
-                required
-              >
-                <option value="">Select category</option>
-                {categories.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
             </FormField>
             <FormField label="Collection">
               <select
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3"
                 value={form.collectionId}
-                onChange={(e) => change("collectionId", e.target.value)}
+                onChange={(event) => change("collectionId", event.target.value)}
               >
                 <option value="">No collection</option>
                 {collections.map((item) => (
@@ -231,7 +333,9 @@ export default function ProductsPage() {
               <select
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3"
                 value={form.status}
-                onChange={(e) => change("status", e.target.value)}
+                onChange={(event) =>
+                  change("status", event.target.value as Product["status"])
+                }
               >
                 <option value="DRAFT">Draft</option>
                 <option value="ACTIVE">Active</option>
@@ -243,27 +347,139 @@ export default function ProductsPage() {
             <Textarea
               rows={3}
               value={form.description}
-              onChange={(e) => change("description", e.target.value)}
+              onChange={(event) => change("description", event.target.value)}
             />
           </FormField>
-          <FormField label="Image URLs">
-            <Textarea
-              rows={3}
-              value={form.images}
-              onChange={(e) => change("images", e.target.value)}
-              placeholder="One image URL per line"
-            />
-          </FormField>
+          <fieldset className="rounded-xl border border-line p-4">
+            <legend className="px-1 text-sm font-medium">
+              Categories <span className="text-danger">*</span>
+            </legend>
+            <p className="mb-3 text-sm text-black/60">
+              Select one or more categories. The default category shows first on
+              the storefront.
+            </p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {categories.map((category) => (
+                <label
+                  key={category.id}
+                  className="flex items-center gap-3 rounded-lg border border-black/10 p-3"
+                >
+                  <input
+                    type="checkbox"
+                    checked={form.categoryIds.includes(category.id)}
+                    onChange={(event) =>
+                      setCategory(category.id, event.target.checked)
+                    }
+                  />
+                  <span className="flex-1 text-sm font-medium">
+                    {category.name}
+                  </span>
+                  {form.categoryIds.includes(category.id) && (
+                    <span className="flex items-center gap-1 text-xs">
+                      <input
+                        type="radio"
+                        name="default-category"
+                        checked={form.defaultCategoryId === category.id}
+                        onChange={() =>
+                          change("defaultCategoryId", category.id)
+                        }
+                      />{" "}
+                      Default
+                    </span>
+                  )}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          {form.categoryIds.map((categoryId) => {
+            const category = categories.find((item) => item.id === categoryId);
+            const existing = form.images.filter(
+              (image) => image.categoryId === categoryId
+            );
+            const pending = files[categoryId] ?? [];
+            return (
+              <section
+                key={categoryId}
+                className="rounded-xl border border-line p-4"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="font-semibold">{category?.name} images</h3>
+                    <p className="text-sm text-black/60">
+                      Upload images that represent this design in this category.
+                    </p>
+                  </div>
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white">
+                    <FiUpload /> Add images
+                    <input
+                      className="sr-only"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={(event) => chooseFiles(categoryId, event)}
+                    />
+                  </label>
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+                  {existing.map((image, index) => (
+                    <div
+                      key={`${image.url}-${index}`}
+                      className="relative aspect-square overflow-hidden rounded-lg border"
+                    >
+                      <img
+                        src={image.url}
+                        alt="Product preview"
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        aria-label="Remove image"
+                        onClick={() => removeImage(categoryId, index)}
+                        className="absolute right-1 top-1 rounded-full bg-white p-1 text-black shadow"
+                      >
+                        <FiX />
+                      </button>
+                    </div>
+                  ))}
+                  {pending.map((file, index) => (
+                    <div
+                      key={`${file.name}-${index}`}
+                      className="relative aspect-square overflow-hidden rounded-lg border bg-black/5"
+                    >
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="New upload preview"
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        aria-label="Remove image"
+                        onClick={() => removeNewFile(categoryId, index)}
+                        className="absolute right-1 top-1 rounded-full bg-white p-1 text-black shadow"
+                      >
+                        <FiX />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {!existing.length && !pending.length && (
+                  <p className="mt-3 text-sm text-danger">
+                    At least one image is required for this category.
+                  </p>
+                )}
+              </section>
+            );
+          })}
           <Checkbox
             label="Feature this product on the home page"
             checked={form.isFeatured}
-            onChange={(e) => change("isFeatured", e.target.checked)}
+            onChange={(event) => change("isFeatured", event.target.checked)}
           />
           {error && <p className="form-error">{error}</p>}
           <div className="flex justify-end">
             <Button disabled={saving}>
               {saving
-                ? "Saving..."
+                ? "Uploading & saving..."
                 : editing
                 ? "Update Product"
                 : "Create Product"}
