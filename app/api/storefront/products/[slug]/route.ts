@@ -8,6 +8,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
     where: { slug, status: ProductStatus.ACTIVE },
     include: {
       category: true,
+      collection: true,
       categories: { include: { category: true }, orderBy: { createdAt: "asc" } },
       images: { orderBy: { sortOrder: "asc" } },
     },

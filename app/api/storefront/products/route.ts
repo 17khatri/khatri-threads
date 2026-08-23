@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     where: { status: ProductStatus.ACTIVE, ...(featured ? { isFeatured: true } : {}) },
     include: {
       category: true,
+      collection: true,
       categories: { include: { category: true }, orderBy: { createdAt: "asc" } },
       images: { orderBy: { sortOrder: "asc" } },
     },
