@@ -3,23 +3,16 @@
 import Button from "@/app/components/button";
 import logo from "../../public/logo.jpeg";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ROUTES from "@/helper/routes";
-
-type StorefrontProduct = {
-  id: string;
-  slug: string;
-  name: string;
-  price: string;
-  categoryId: string;
-  images: { id: string; categoryId: string; url: string; altText: string | null }[];
-};
+import ProductCard, {
+  type StorefrontProductCardData,
+} from "@/app/components/storefront/product-card";
 
 export default function Page() {
   const router = useRouter();
-  const [products, setProducts] = useState<StorefrontProduct[]>([]);
+  const [products, setProducts] = useState<StorefrontProductCardData[]>([]);
 
   const navigateToCollections = () => {
     router.push(ROUTES.COLLECTIONS);
@@ -102,36 +95,9 @@ export default function Page() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:gap-x-5 md:grid-cols-4">
-            {products.map((product) => {
-              const image =
-                product.images.find(
-                  (item) => item.categoryId === product.categoryId
-                ) ?? product.images[0];
-
-              return (
-              <Link
-                key={product.id}
-                href={`/products/${product.slug}`}
-                className="group block"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
-                  {image && (
-                    <img
-                      src={image.url}
-                      alt={image.altText || product.name}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  )}
-                </div>
-                <h3 className="mt-3 text-sm font-medium leading-5 sm:text-base">
-                  {product.name}
-                </h3>
-                <p className="mt-1 text-sm font-semibold text-black">
-                  ₹ {Number(product.price).toLocaleString("en-IN")}
-                </p>
-              </Link>
-              );
-            })}
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       </section>
