@@ -37,8 +37,7 @@ export default function RegisterPage() {
           <div className="space-y-6 text-center">
             <div className="rounded-2xl border border-line bg-background p-5">
               <P className="text-black">
-                Your account for {registration.registeredUser.officeName} is
-                ready.
+                Your account is ready.
               </P>
             </div>
             <Button href="/login" className="w-full">

@@ -17,7 +17,6 @@ export interface RegisterRequest {
   email: string;
   firstName: string;
   lastName: string;
-  officeName: string;
   phone: string;
   password: string;
   confirmPassword: string;
@@ -31,7 +30,6 @@ export interface RegisteredUser {
   id: string;
   firstName: string;
   lastName: string;
-  officeName: string;
   email: string;
   phone: string;
   address: string | null;

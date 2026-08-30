@@ -79,7 +79,6 @@ export function useRegistration() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      officeName: "",
       phone: "",
       password: "",
       confirmPassword: "",

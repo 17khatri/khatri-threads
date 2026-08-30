@@ -1,6 +1,6 @@
 "use client";
 
-import { FiBriefcase, FiDownload, FiMail, FiPhone, FiUser } from "react-icons/fi";
+import { FiDownload, FiMail, FiPhone, FiUser } from "react-icons/fi";
 import Button from "@/app/components/button";
 import { H2, H3, P } from "@/app/components/typography";
 import { useUsers } from "@/app/hooks/use-users";
@@ -16,12 +16,11 @@ export default function UsersPage() {
   const user = useAuthStore((state) => state.user);
 
   function exportUsers() {
-    const headings = ["Name", "Phone", "Email", "Office Name", "Address", "City", "Pincode"];
+    const headings = ["Name", "Phone", "Email", "Address", "City", "Pincode"];
     const rows = users.map((exportUser) => [
       `${exportUser.firstName} ${exportUser.lastName}`.trim(),
       exportUser.phone,
       exportUser.email,
-      exportUser.officeName,
       exportUser.address,
       exportUser.city,
       exportUser.pincode,
@@ -100,10 +99,6 @@ export default function UsersPage() {
                       {user.phone}
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <FiBriefcase size={16} />
-                      {user.officeName}
-                    </div>
                   </div>
                 </div>
               </div>

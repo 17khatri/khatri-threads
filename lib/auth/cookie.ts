@@ -1,6 +1,6 @@
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
-export const AUTH_COOKIE_NAME = "khushi_auth";
+export const AUTH_COOKIE_NAME = "khatri_threads_auth";
 
 export const AUTH_COOKIE_OPTIONS: Partial<ResponseCookie> = {
   httpOnly: true,

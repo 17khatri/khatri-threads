@@ -84,7 +84,6 @@ export async function POST(request: Request) {
       data: {
         firstName: parsed.data.firstName,
         lastName: parsed.data.lastName,
-        officeName: parsed.data.officeName,
         email: parsed.data.email,
         emailVerified: true,
         phone: parsed.data.phone,
@@ -98,7 +97,6 @@ export async function POST(request: Request) {
         id: true,
         firstName: true,
         lastName: true,
-        officeName: true,
         email: true,
         phone: true,
         address: true,

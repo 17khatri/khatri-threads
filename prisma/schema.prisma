@@ -16,7 +16,6 @@ model User {
   emailVerified Boolean @default(true)
   passwordHash  String
 
-  officeName String
   address    String?
   city       String?
   state      String?

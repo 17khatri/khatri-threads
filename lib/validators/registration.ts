@@ -40,7 +40,6 @@ export const registrationDetailsSchema = z
   .object({
     firstName: requiredText("First name"),
     lastName: requiredText("Last name"),
-    officeName: requiredText("Office name"),
     phone: z
       .string()
       .trim()
