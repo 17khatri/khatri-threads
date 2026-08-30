@@ -1,17 +1,55 @@
 "use client";
 
-import { FiMenu, FiSearch, FiShoppingCart, FiUser, FiX } from "react-icons/fi";
+import { FiEdit2, FiMenu, FiShoppingCart, FiUser, FiX } from "react-icons/fi";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import ROUTES from "@/helper/routes";
+import { useAuth } from "@/app/hooks/use-auth";
+import { useAuthStore } from "@/store/auth-store";
+import { Drawer } from "@/app/components/drawer";
+import { FormField, Input } from "@/app/components/form-fields";
+import type { AuthUser } from "@/types/auth";
+
+type ProfileDraft = Pick<
+  AuthUser,
+  "firstName" | "lastName" | "email" | "phone"
+> & {
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+};
+
+const toProfileDraft = (user: AuthUser): ProfileDraft => ({
+  firstName: user.firstName,
+  lastName: user.lastName,
+  email: user.email,
+  phone: user.phone,
+  address: user.address || "",
+  city: user.city || "",
+  state: user.state || "",
+  pincode: user.pincode || "",
+});
 
 export default function StorefrontHeader() {
   const [isMenuMounted, setIsMenuMounted] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
+  const [profileUser, setProfileUser] = useState<AuthUser | null>(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileDraft, setProfileDraft] = useState<ProfileDraft | null>(null);
   const closeTimer = useRef<number | null>(null);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { logout } = useAuth();
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const navigateToCollections = () => {
     router.push(ROUTES.COLLECTIONS);
@@ -24,6 +62,76 @@ export default function StorefrontHeader() {
     };
   }, []);
 
+  useEffect(() => {
+    let isCancelled = false;
+
+    void fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) return;
+
+        const data = (await response.json()) as { user?: AuthUser };
+        if (!isCancelled && data.user) setUser(data.user);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!isCancelled) setIsAuthReady(true);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [setUser]);
+
+  useEffect(() => {
+    if (!isProfileDrawerOpen) return;
+
+    let isCancelled = false;
+    void fetch("/api/auth/me", { credentials: "include" })
+      .then(async (response) => {
+        const data = (await response.json()) as { user?: AuthUser; error?: string };
+
+        if (!response.ok || !data.user) {
+          throw new Error(data.error || "Unable to load profile details.");
+        }
+
+        if (!isCancelled) {
+          setProfileUser(data.user);
+          setUser(data.user);
+        }
+      })
+      .catch((error: unknown) => {
+        if (!isCancelled) {
+          setProfileError(
+            error instanceof Error ? error.message : "Unable to load profile details.",
+          );
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isProfileDrawerOpen, setUser]);
+
+  useEffect(() => {
+    const closeAccountMenu = (event: MouseEvent) => {
+      if (!accountMenuRef.current?.contains(event.target as Node)) {
+        setIsAccountMenuOpen(false);
+      }
+    };
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsAccountMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", closeAccountMenu);
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", closeAccountMenu);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+
   const openMenu = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
     setIsMenuMounted(true);
@@ -33,6 +141,74 @@ export default function StorefrontHeader() {
   const closeMenu = () => {
     setIsMenuVisible(false);
     closeTimer.current = window.setTimeout(() => setIsMenuMounted(false), 200);
+  };
+
+  const handleLogout = async () => {
+    setIsAccountMenuOpen(false);
+    await logout();
+  };
+
+  const openProfileDrawer = () => {
+    setIsAccountMenuOpen(false);
+    if (!user) {
+      router.push(ROUTES.LOGIN);
+      return;
+    }
+    setProfileError("");
+    setProfileUser(user);
+    setIsProfileDrawerOpen(true);
+  };
+
+  const handleAccountClick = () => {
+    if (!isAuthReady) return;
+
+    if (!user) {
+      router.push(ROUTES.LOGIN);
+      return;
+    }
+
+    setIsAccountMenuOpen((isOpen) => !isOpen);
+  };
+
+  const startEditingProfile = () => {
+    const currentUser = profileUser || user;
+    if (!currentUser) return;
+
+    setProfileDraft(toProfileDraft(currentUser));
+    setProfileError("");
+    setIsEditingProfile(true);
+  };
+
+  const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!profileDraft) return;
+
+    setIsSavingProfile(true);
+    setProfileError("");
+
+    try {
+      const response = await fetch("/api/auth/me", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileDraft),
+      });
+      const data = (await response.json()) as { user?: AuthUser; error?: string };
+
+      if (!response.ok || !data.user) {
+        throw new Error(data.error || "Unable to update profile.");
+      }
+
+      setProfileUser(data.user);
+      setUser(data.user);
+      setIsEditingProfile(false);
+    } catch (error) {
+      setProfileError(
+        error instanceof Error ? error.message : "Unable to update profile.",
+      );
+    } finally {
+      setIsSavingProfile(false);
+    }
   };
 
   return (
@@ -49,9 +225,6 @@ export default function StorefrontHeader() {
             <a onClick={navigateToCollections} className="hover:text-primary">
               Shop
             </a>
-            <a href="#about" className="hover:text-primary">
-              Contact
-            </a>
           </nav>
         </div>
 
@@ -65,13 +238,6 @@ export default function StorefrontHeader() {
           >
             <FiMenu size={20} />
           </button>
-          <button
-            type="button"
-            aria-label="Search products"
-            className="hover:text-primary cursor-pointer"
-          >
-            <FiSearch size={20} />
-          </button>
         </div>
 
         <Link
@@ -82,20 +248,44 @@ export default function StorefrontHeader() {
         </Link>
 
         <div className="flex items-center gap-4 text-slate-900 sm:gap-6">
-          <button
-            type="button"
-            aria-label="Search products"
-            className="hidden hover:text-primary md:block cursor-pointer"
-          >
-            <FiSearch size={20} />
-          </button>
-          <Link
-            href="/login"
-            aria-label="Account"
-            className="hover:text-primary cursor-pointer"
-          >
-            <FiUser size={20} />
-          </Link>
+          <div ref={accountMenuRef} className="relative flex">
+            <button
+              type="button"
+              aria-label="Account"
+              aria-expanded={user ? isAccountMenuOpen : undefined}
+              aria-haspopup={user ? "menu" : undefined}
+              aria-busy={!isAuthReady}
+              onClick={handleAccountClick}
+              className="cursor-pointer hover:text-primary"
+            >
+              <FiUser size={20} />
+            </button>
+
+            {isAccountMenuOpen && (
+              <div
+                role="menu"
+                aria-label="Account options"
+                className="absolute right-0 top-full z-20 mt-3 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={openProfileDrawer}
+                  className="block w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-slate-50 hover:text-primary"
+                >
+                  View profile
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleLogout}
+                  className="block w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-slate-50 hover:text-primary"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
           <button
             type="button"
             aria-label="Shopping bag, 1 item"
@@ -105,6 +295,70 @@ export default function StorefrontHeader() {
           </button>
         </div>
       </header>
+
+      <Drawer
+        open={isProfileDrawerOpen}
+        title="My profile"
+        onClose={() => setIsProfileDrawerOpen(false)}
+      >
+        {profileUser || user ? (
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
+                {(profileUser || user)?.firstName[0]?.toUpperCase() || "U"}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-slate-900">
+                  {(profileUser || user)?.firstName} {(profileUser || user)?.lastName}
+                </p>
+              </div>
+              {!isEditingProfile && (
+                <button
+                  type="button"
+                  onClick={startEditingProfile}
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:border-primary hover:text-primary"
+                >
+                  <FiEdit2 size={16} />
+                  Edit
+                </button>
+              )}
+            </div>
+
+            {profileError && (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {profileError}
+              </p>
+            )}
+
+            {isEditingProfile && profileDraft ? (
+              <ProfileForm
+                draft={profileDraft}
+                isSaving={isSavingProfile}
+                onCancel={() => setIsEditingProfile(false)}
+                onChange={(field, value) =>
+                  setProfileDraft((currentDraft) =>
+                    currentDraft ? { ...currentDraft, [field]: value } : currentDraft,
+                  )
+                }
+                onSubmit={saveProfile}
+              />
+            ) : (
+              <dl className="divide-y divide-slate-100 rounded-lg border border-slate-200">
+                <ProfileDetail label="First name" value={(profileUser || user)?.firstName} />
+                <ProfileDetail label="Last name" value={(profileUser || user)?.lastName} />
+                <ProfileDetail label="Email" value={(profileUser || user)?.email} />
+                <ProfileDetail label="Phone" value={(profileUser || user)?.phone} />
+                <ProfileDetail label="Address" value={(profileUser || user)?.address} />
+                <ProfileDetail label="City" value={(profileUser || user)?.city} />
+                <ProfileDetail label="State" value={(profileUser || user)?.state} />
+                <ProfileDetail label="Pincode" value={(profileUser || user)?.pincode} />
+              </dl>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-600">No user details are available.</p>
+        )}
+      </Drawer>
 
       {isMenuMounted &&
         createPortal(
@@ -142,18 +396,83 @@ export default function StorefrontHeader() {
                 >
                   Shop
                 </a>
-                <a
-                  href="#about"
-                  onClick={closeMenu}
-                  className="py-5 text-lg font-medium"
-                >
-                  Contact
-                </a>
               </nav>
             </aside>
           </div>,
           document.body
         )}
     </>
+  );
+}
+
+function ProfileDetail({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div className="px-4 py-3">
+      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        {label}
+      </dt>
+      <dd className="mt-1 break-words text-sm text-slate-900">{value || "—"}</dd>
+    </div>
+  );
+}
+
+function ProfileForm({
+  draft,
+  isSaving,
+  onCancel,
+  onChange,
+  onSubmit,
+}: {
+  draft: ProfileDraft;
+  isSaving: boolean;
+  onCancel: () => void;
+  onChange: (field: keyof ProfileDraft, value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}) {
+  const fields: Array<{ field: keyof ProfileDraft; label: string; type?: string; maxLength?: number }> = [
+    { field: "firstName", label: "First name" },
+    { field: "lastName", label: "Last name" },
+    { field: "email", label: "Email", type: "email" },
+    { field: "phone", label: "Phone", type: "tel", maxLength: 10 },
+    { field: "address", label: "Address" },
+    { field: "city", label: "City" },
+    { field: "state", label: "State" },
+    { field: "pincode", label: "Pincode", maxLength: 6 },
+  ];
+
+  return (
+    <form className="space-y-4" onSubmit={onSubmit}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {fields.map(({ field, label, type = "text", maxLength }) => (
+          <FormField key={field} label={label} htmlFor={`profile-${field}`}>
+            <Input
+              id={`profile-${field}`}
+              type={type}
+              value={draft[field]}
+              maxLength={maxLength}
+              disabled={isSaving}
+              onChange={(event) => onChange(field, event.target.value)}
+            />
+          </FormField>
+        ))}
+      </div>
+      <div className="flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={isSaving}
+          className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSaving}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isSaving ? "Saving..." : "Save changes"}
+        </button>
+      </div>
+    </form>
   );
 }

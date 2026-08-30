@@ -9,7 +9,6 @@ import {
   FiEyeOff,
   FiLock,
   FiPhone,
-  FiUser,
 } from "react-icons/fi";
 import Button from "@/app/components/button";
 import { FormField, Input } from "@/app/components/form-fields";
@@ -90,29 +89,6 @@ export function RegistrationDetails({
           />
         </FormField>
       </div>
-
-      <FormField
-        label="Office Name"
-        htmlFor="office-name"
-        required
-        error={form.formState.errors.officeName?.message}
-      >
-        <div className="relative">
-          <FiUser
-            aria-hidden="true"
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted"
-            size={18}
-          />
-          <Input
-            id="office-name"
-            autoComplete="organization"
-            placeholder="Office or business name"
-            className="pl-11"
-            disabled={isLoading}
-            {...form.register("officeName")}
-          />
-        </div>
-      </FormField>
 
       <FormField
         label="Phone Number"

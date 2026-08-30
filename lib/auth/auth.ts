@@ -36,9 +36,12 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       id: true,
       firstName: true,
       lastName: true,
-      officeName: true,
       email: true,
       phone: true,
+      address: true,
+      city: true,
+      state: true,
+      pincode: true,
       role: true,
     },
   });

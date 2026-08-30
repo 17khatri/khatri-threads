@@ -23,7 +23,6 @@ export async function GET() {
       lastName: true,
       phone: true,
       email: true,
-      officeName: true,
       address: true,
       city: true,
       pincode: true,

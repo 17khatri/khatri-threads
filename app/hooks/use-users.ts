@@ -6,7 +6,6 @@ export type User = {
   lastName: string;
   email: string;
   phone: string;
-  officeName: string;
   address: string | null;
   city: string | null;
   pincode: string | null;

@@ -66,9 +66,12 @@ export async function POST(request: Request) {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        officeName: user.officeName,
         email: user.email,
         phone: user.phone,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        pincode: user.pincode,
         role: user.role,
       },
     });
