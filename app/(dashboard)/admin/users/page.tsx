@@ -33,7 +33,7 @@ export default function UsersPage() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "khushi-enterprise-users.csv";
+    link.download = "Khatri-threads-users.csv";
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -41,31 +41,25 @@ export default function UsersPage() {
   if (user && user.role !== "ADMIN") {
     return (
       <div className="w-full flex items-center justify-center p-8">
-        <P className="text-red-500 font-semibold">Access Denied. Admins only.</P>
+        <P className="text-red-500 font-semibold">
+          Access Denied. Admins only.
+        </P>
       </div>
     );
   }
 
-
   return (
     <div className="w-full">
       <div className="panel list-panel">
-        <div className="panel-heading">
-          <div>
-            <H2 className="mb-2">Users</H2>
-            <P>Manage all registered users.</P>
-          </div>
-          <Button
-            type="button"
-            size="md"
-            onClick={exportUsers}
-            disabled={loading || users.length === 0}
-          >
-            <FiDownload size={17} aria-hidden="true" />
-            Export to Excel
-          </Button>
-        </div>
-
+        <Button
+          type="button"
+          size="md"
+          onClick={exportUsers}
+          disabled={loading || users.length === 0}
+        >
+          <FiDownload size={17} aria-hidden="true" />
+          Export to Excel
+        </Button>
         {loading && <div className="surface-message">Loading...</div>}
 
         {!loading && users.length === 0 && (
@@ -76,10 +70,10 @@ export default function UsersPage() {
           {users.map((user) => (
             <article
               key={user.id}
-              className="rounded-xl border border-line bg-panel p-5 transition hover:border-primary hover:shadow-md"
+              className="border border-line bg-panel p-5 transition hover:border-primary hover:shadow-md"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15">
+                <div className="flex h-14 w-14 items-center justify-center bg-primary/15">
                   <FiUser className="text-primary" size={32} />
                 </div>
 
@@ -98,7 +92,6 @@ export default function UsersPage() {
                       <FiPhone size={16} />
                       {user.phone}
                     </div>
-
                   </div>
                 </div>
               </div>

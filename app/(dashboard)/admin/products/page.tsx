@@ -227,17 +227,9 @@ export default function ProductsPage() {
   };
   return (
     <div className="panel list-panel">
-      <div className="panel-heading">
-        <div>
-          <P>
-            Create one design, assign one or more categories, and upload
-            category-specific images.
-          </P>
-        </div>
-        <Button onClick={openCreate}>
-          <FiPlus /> Add Product
-        </Button>
-      </div>
+      <Button onClick={openCreate}>
+        <FiPlus /> Add Product
+      </Button>
       {error && <p className="form-error">{error}</p>}
       <div className="overflow-x-auto">
         <div className="min-w-[720px] divide-y divide-line">
@@ -260,23 +252,21 @@ export default function ProductsPage() {
                 </p>
                 <p className="text-sm">Default: {product.category.name}</p>
                 <p className="text-sm">
-                  <span className="rounded-full bg-black/5 px-3 py-1">
-                    {product.status}
-                  </span>
+                  <span className="bg-black/5 px-3 py-1">{product.status}</span>
                 </p>
                 <div className="item-actions">
-                  <button
+                  <Button variant="unstyled" size="none"
                     aria-label={`Edit ${product.name}`}
                     onClick={() => openEdit(product)}
                   >
                     <FiEdit2 size={16} />
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="unstyled" size="none"
                     aria-label={`Delete ${product.name}`}
                     onClick={() => void remove(product.id)}
                   >
                     <FiTrash2 color="red" size={16} />
-                  </button>
+                  </Button>
                 </div>
               </article>
             ))
@@ -317,7 +307,7 @@ export default function ProductsPage() {
             </FormField>
             <FormField label="Collection">
               <select
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3"
+                className="w-full border border-gray-200 bg-white px-4 py-3"
                 value={form.collectionId}
                 onChange={(event) => change("collectionId", event.target.value)}
               >
@@ -331,7 +321,7 @@ export default function ProductsPage() {
             </FormField>
             <FormField label="Status">
               <select
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3"
+                className="w-full border border-gray-200 bg-white px-4 py-3"
                 value={form.status}
                 onChange={(event) =>
                   change("status", event.target.value as Product["status"])
@@ -350,7 +340,7 @@ export default function ProductsPage() {
               onChange={(event) => change("description", event.target.value)}
             />
           </FormField>
-          <fieldset className="rounded-xl border border-line p-4">
+          <fieldset className="border border-line p-4">
             <legend className="px-1 text-sm font-medium">
               Categories <span className="text-danger">*</span>
             </legend>
@@ -362,7 +352,7 @@ export default function ProductsPage() {
               {categories.map((category) => (
                 <label
                   key={category.id}
-                  className="flex items-center gap-3 rounded-lg border border-black/10 p-3"
+                  className="flex items-center gap-3 border border-black/10 p-3"
                 >
                   <input
                     type="checkbox"
@@ -398,10 +388,7 @@ export default function ProductsPage() {
             );
             const pending = files[categoryId] ?? [];
             return (
-              <section
-                key={categoryId}
-                className="rounded-xl border border-line p-4"
-              >
+              <section key={categoryId} className="border border-line p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="font-semibold">{category?.name} images</h3>
@@ -409,7 +396,7 @@ export default function ProductsPage() {
                       Upload images that represent this design in this category.
                     </p>
                   </div>
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white">
+                  <label className="inline-flex cursor-pointer items-center gap-2 bg-primary px-4 py-2 text-sm font-medium text-white">
                     <FiUpload /> Add images
                     <input
                       className="sr-only"
@@ -424,41 +411,41 @@ export default function ProductsPage() {
                   {existing.map((image, index) => (
                     <div
                       key={`${image.url}-${index}`}
-                      className="relative aspect-square overflow-hidden rounded-lg border"
+                      className="relative aspect-square overflow-hidden border"
                     >
                       <img
                         src={image.url}
                         alt="Product preview"
                         className="h-full w-full object-cover"
                       />
-                      <button
+                      <Button variant="unstyled" size="none"
                         type="button"
                         aria-label="Remove image"
                         onClick={() => removeImage(categoryId, index)}
-                        className="absolute right-1 top-1 rounded-full bg-white p-1 text-black shadow"
+                        className="absolute right-1 top-1 bg-white p-1 text-black shadow"
                       >
                         <FiX />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                   {pending.map((file, index) => (
                     <div
                       key={`${file.name}-${index}`}
-                      className="relative aspect-square overflow-hidden rounded-lg border bg-black/5"
+                      className="relative aspect-square overflow-hidden border bg-black/5"
                     >
                       <img
                         src={URL.createObjectURL(file)}
                         alt="New upload preview"
                         className="h-full w-full object-cover"
                       />
-                      <button
+                      <Button variant="unstyled" size="none"
                         type="button"
                         aria-label="Remove image"
                         onClick={() => removeNewFile(categoryId, index)}
-                        className="absolute right-1 top-1 rounded-full bg-white p-1 text-black shadow"
+                        className="absolute right-1 top-1 bg-white p-1 text-black shadow"
                       >
                         <FiX />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>

@@ -146,14 +146,14 @@ export function RegistrationDetails({
               disabled={isLoading}
               {...form.register("password")}
             />
-            <button
+            <Button variant="unstyled" size="none"
               type="button"
               onClick={() => setShowPassword((value) => !value)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-muted"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-            </button>
+            </Button>
           </div>
         </FormField>
 
@@ -177,7 +177,7 @@ export function RegistrationDetails({
           id="password-guide"
           role="tooltip"
           aria-live="polite"
-          className={`absolute left-0 top-full z-20 mt-3 w-full origin-top rounded-2xl border border-gray-200 bg-panel p-4 shadow-xl shadow-black/10 transition-all duration-200 sm:w-[340px] ${
+          className={`absolute left-0 top-full z-20 mt-3 w-full origin-top rounded-none border border-gray-200 bg-panel p-4 shadow-xl shadow-black/10 transition-all duration-200 sm:w-[340px] ${
             isPasswordGuideOpen
               ? "translate-y-0 scale-100 opacity-100"
               : "pointer-events-none -translate-y-2 scale-95 opacity-0"
@@ -199,7 +199,7 @@ export function RegistrationDetails({
               </p>
             </div>
             <span
-              className={`rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${
+              className={`rounded-none px-2.5 py-1 text-xs font-bold tabular-nums ${
                 hasStrongPassword
                   ? "bg-success/10 text-success"
                   : "bg-primary/15 text-primary"
@@ -213,7 +213,7 @@ export function RegistrationDetails({
             {passwordRequirements.map((requirement) => (
               <span
                 key={requirement.label}
-                className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+                className={`h-1.5 flex-1 rounded-none transition-colors duration-300 ${
                   requirement.isMet ? "bg-success" : "bg-gray-200"
                 }`}
               />

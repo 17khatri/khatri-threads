@@ -24,7 +24,7 @@ export default function DashboardShell({
   }, [initialUser, setUser]);
 
   return (
-    <div className="flex min-h-screen gap-4 bg-slate-100 p-4">
+    <div className="flex min-h-screen bg-slate-100">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       <div className="flex flex-1 flex-col">

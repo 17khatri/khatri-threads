@@ -38,11 +38,12 @@ export default function CategoriesPage() {
   if (user && user.role !== "ADMIN") {
     return (
       <div className="w-full flex items-center justify-center p-8">
-        <P className="text-red-500 font-semibold">Access Denied. Admins only.</P>
+        <P className="text-red-500 font-semibold">
+          Access Denied. Admins only.
+        </P>
       </div>
     );
   }
-
 
   function openCreateModal() {
     setEditingCategory(null);
@@ -139,16 +140,9 @@ export default function CategoriesPage() {
       />
 
       <div className="panel list-panel">
-        <div className="panel-heading">
-          <div>
-            <H2 className="mb-2">Categories</H2>
-            <P>Manage product categories.</P>
-          </div>
-
-          <Button onClick={openCreateModal}>
-            <FiPlus /> Add Category
-          </Button>
-        </div>
+        <Button onClick={openCreateModal}>
+          <FiPlus /> Add Category
+        </Button>
 
         {loading && <div className="surface-message">Loading...</div>}
 
@@ -160,23 +154,23 @@ export default function CategoriesPage() {
           {categories.map((category) => (
             <article
               key={category.id}
-              className="flex items-center gap-4 justify-between border border-line rounded-lg p-4"
+              className="flex items-center gap-4 justify-between border border-line p-4"
             >
               <H3 className="font-medium">{category.name}</H3>
 
               <div className="item-actions shrink-0">
-                <button onClick={() => openEditModal(category)}>
+                <Button variant="unstyled" size="none" onClick={() => openEditModal(category)}>
                   <FiEdit2 className="cursor-pointer" size={16} />
-                </button>
+                </Button>
 
-                <button
+                <Button variant="unstyled" size="none"
                   onClick={() => {
                     setSelectedCategory(category);
                     setShowDeleteModal(true);
                   }}
                 >
                   <FiTrash2 className="cursor-pointer" color="red" size={16} />
-                </button>
+                </Button>
               </div>
             </article>
           ))}

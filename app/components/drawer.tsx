@@ -4,6 +4,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { cn } from "@/lib/utils";
+import Button from "./button";
 
 type DrawerProps = {
   open: boolean;
@@ -84,7 +85,7 @@ export function Drawer({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-label={title}>
-      <button
+      <Button variant="unstyled" size="none"
         type="button"
         aria-label={`Close ${title}`}
         className={cn(
@@ -102,14 +103,14 @@ export function Drawer({
       >
         <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
           <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-          <button
+          <Button variant="unstyled" size="none"
             type="button"
             aria-label={`Close ${title}`}
             onClick={onClose}
-            className="rounded-md p-1 text-slate-600 hover:bg-slate-100 hover:text-primary"
+            className="rounded-none p-1 text-slate-600 hover:bg-slate-100 hover:text-primary"
           >
             <FiX size={22} />
-          </button>
+          </Button>
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
       </section>

@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 const COOKIE_MAX_AGE_SECONDS = 10 * 60;
-const COOKIE_NAME = "khushi_password_reset";
+const COOKIE_NAME = "khatri_threads_password_reset";
 
 interface PasswordResetPayload {
   email: string;

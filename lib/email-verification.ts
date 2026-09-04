@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 const COOKIE_MAX_AGE_SECONDS = 10 * 60;
-const COOKIE_NAME = "khushi_email_verified";
+const COOKIE_NAME = "khatri_threads_email_verified";
 
 interface VerificationPayload {
   email: string;

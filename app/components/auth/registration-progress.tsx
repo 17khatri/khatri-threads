@@ -39,7 +39,7 @@ export function RegistrationProgress({
           <div
             key={step}
             className={cn(
-              "rounded-2xl border p-3 text-center",
+              "rounded-none border p-3 text-center",
               isActive || isComplete
                 ? "border-primary bg-primary/10"
                 : "border-line bg-background",
@@ -47,7 +47,7 @@ export function RegistrationProgress({
           >
             <div
               className={cn(
-                "mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full",
+                "mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-none",
                 isComplete
                   ? "bg-success text-white"
                   : isActive

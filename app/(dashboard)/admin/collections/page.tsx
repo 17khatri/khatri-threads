@@ -51,33 +51,27 @@ export default function CollectionsPage() {
   };
   return (
     <div className="panel list-panel">
-      <div className="panel-heading">
-        <div>
-          <H2 className="mb-2">Collections</H2>
-          <P>Manage optional groups for your products.</P>
-        </div>
-        <Button
-          onClick={() => {
-            setEditing(null);
-            setName("");
-            setError("");
-            setOpen(true);
-          }}
-        >
-          <FiPlus /> Add Collection
-        </Button>
-      </div>
+      <Button
+        onClick={() => {
+          setEditing(null);
+          setName("");
+          setError("");
+          setOpen(true);
+        }}
+      >
+        <FiPlus /> Add Collection
+      </Button>
       {error && <p className="form-error">{error}</p>}
       <div className="category-list">
         {collections.length ? (
           collections.map((collection) => (
             <article
               key={collection.id}
-              className="flex items-center justify-between gap-4 rounded-lg border border-line p-4"
+              className="flex items-center justify-between gap-4 border border-line p-4"
             >
               <H3>{collection.name}</H3>
               <div className="item-actions shrink-0">
-                <button
+                <Button variant="unstyled" size="none"
                   aria-label={`Edit ${collection.name}`}
                   onClick={() => {
                     setEditing(collection);
@@ -87,13 +81,13 @@ export default function CollectionsPage() {
                   }}
                 >
                   <FiEdit2 size={16} />
-                </button>
-                <button
+                </Button>
+                <Button variant="unstyled" size="none"
                   aria-label={`Delete ${collection.name}`}
                   onClick={() => void remove(collection.id)}
                 >
                   <FiTrash2 color="red" size={16} />
-                </button>
+                </Button>
               </div>
             </article>
           ))

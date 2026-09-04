@@ -22,23 +22,21 @@ export default function RegisterPage() {
         <RegistrationProgress currentStep={registration.step} />
 
         {registration.error && (
-          <div className="mb-5 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
+          <div className="mb-5 border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
             {registration.error}
           </div>
         )}
 
         {registration.successMessage && (
-          <div className="mb-5 rounded-2xl border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">
+          <div className="mb-5 border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">
             {registration.successMessage}
           </div>
         )}
 
         {registration.registeredUser ? (
           <div className="space-y-6 text-center">
-            <div className="rounded-2xl border border-line bg-background p-5">
-              <P className="text-black">
-                Your account is ready.
-              </P>
+            <div className=" border border-line bg-background p-5">
+              <P className="text-black">Your account is ready.</P>
             </div>
             <Button href="/login" className="w-full">
               Go to Login

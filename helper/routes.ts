@@ -4,7 +4,7 @@ const ROUTES = {
   ADMIN_DASHBOARD: "/admin/dashboard",
   CATEGORIES: "/admin/categories",
   USERS: "/admin/users",
-  COLLECTIONS: "/collections",
+  SHOP: "/products",
   ADMIN_COLLECTIONS: "/admin/collections",
   PRODUCTS: "/admin/products",
 
@@ -30,7 +30,7 @@ export const PAGE_TITLES: Record<string, string> = {
   [ROUTES.FORGOT_PASSWORD]: "Forgot Password",
   [ROUTES.NOT_FOUND]: "Page Not Found",
   [ROUTES.USERS]: "Users",
-  [ROUTES.COLLECTIONS]: "Collections",
+  [ROUTES.SHOP]: "Products",
   [ROUTES.ADMIN_COLLECTIONS]: "Collections",
   [ROUTES.PRODUCTS]: "Products",
 };

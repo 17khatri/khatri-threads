@@ -79,10 +79,7 @@ a {
 }
 
 .panel {
-  border: 1px solid var(--line);
-  border-radius: 16px;
   background: var(--panel);
-  box-shadow: 0 12px 35px rgb(27 39 66 / 8%);
 }
 
 .list-panel,
@@ -164,14 +161,6 @@ a {
   border: 1px solid transparent;
   background: transparent;
   color: var(--primary);
-}
-
-.panel-heading,
-.toolbar-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .toolbar-actions {
@@ -263,12 +252,6 @@ a {
   .toolbar {
     display: grid;
     align-items: start;
-  }
-
-  .toolbar-actions,
-  .panel-heading {
-    align-items: stretch;
-    flex-direction: column;
   }
 
   .toolbar-actions > *,

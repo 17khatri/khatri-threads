@@ -7,7 +7,7 @@ export type StorefrontProductCardData = {
   description?: string | null;
   price: string;
   categoryId: string;
-  collection?: { name: string } | null;
+  collection?: { id: string; name: string } | null;
   images: {
     id: string;
     categoryId: string;

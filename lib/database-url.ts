@@ -1,7 +1,7 @@
 type DatabaseTarget = "local" | "supabase";
 
 const DEFAULT_LOCAL_DATABASE_URL =
-  "postgresql://root:root@localhost:5432/khushi_enterprise";
+  "postgresql://root:root@localhost:5432/khatri_threads";
 
 function normalizeDatabaseTarget(value: string | undefined): DatabaseTarget {
   if (!value) {

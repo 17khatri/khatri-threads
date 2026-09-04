@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import Button from "@/app/components/button";
 
 type Product = {
   id: string;
@@ -55,7 +56,7 @@ export default function ProductDetailPage() {
       <main className="wide-shell mx-auto py-16">
         <h1 className="text-2xl font-semibold">Product not found</h1>
         <Link
-          href="/collections"
+          href="/products"
           className="mt-4 inline-block text-primary-strong"
         >
           Browse products
@@ -74,7 +75,7 @@ export default function ProductDetailPage() {
   return (
     <main className="wide-shell mx-auto py-6 sm:py-10 lg:py-12">
       <Link
-        href="/collections"
+        href="/products"
         className="mb-6 inline-flex text-sm font-medium text-black/60 hover:text-black"
       >
         ← Back to shop
@@ -120,14 +121,14 @@ export default function ProductDetailPage() {
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {product.categories.map((item) => (
-                <button
+                <Button variant="unstyled" size="none"
                   key={item.categoryId}
                   type="button"
                   onClick={() => {
                     setSelectedCategoryId(item.categoryId);
                     setAdded(false);
                   }}
-                  className={`rounded-xl border px-4 py-2.5 text-sm font-medium ${
+                  className={`border px-4 py-2.5 text-sm font-medium ${
                     selectedCategoryId === item.categoryId
                       ? "border-black bg-black text-white"
                       : "border-black/15 hover:border-black"
@@ -135,12 +136,12 @@ export default function ProductDetailPage() {
                   aria-pressed={selectedCategoryId === item.categoryId}
                 >
                   {item.category.name}
-                </button>
+                </Button>
               ))}
             </div>
             <div className="mt-7 flex gap-3">
-              <div className="flex h-[52px] min-w-32 items-center justify-between rounded-xl border border-black/15 px-3">
-                <button
+              <div className="flex h-[52px] min-w-32 items-center justify-between border border-black/15 px-3">
+                <Button variant="unstyled" size="none"
                   type="button"
                   className="px-2 text-lg text-black/60 hover:text-black"
                   onClick={() =>
@@ -149,26 +150,26 @@ export default function ProductDetailPage() {
                   aria-label="Decrease quantity"
                 >
                   −
-                </button>
+                </Button>
                 <span className="text-sm font-medium" aria-live="polite">
                   {quantity}
                 </span>
-                <button
+                <Button variant="unstyled" size="none"
                   type="button"
                   className="px-2 text-lg text-black/60 hover:text-black"
                   onClick={() => setQuantity((current) => current + 1)}
                   aria-label="Increase quantity"
                 >
                   +
-                </button>
+                </Button>
               </div>
-              <button
+              <Button variant="unstyled" size="none"
                 type="button"
                 onClick={() => setAdded(true)}
-                className="h-[52px] flex-1 rounded-xl bg-black px-5 text-sm font-semibold text-white hover:bg-black/80"
+                className="h-[52px] flex-1 bg-black px-5 text-sm font-semibold text-white hover:bg-black/80"
               >
                 {added ? "Added to cart" : "Add to cart"}
-              </button>
+              </Button>
             </div>
             {added && (
               <p className="mt-3 text-sm text-success" role="status">
