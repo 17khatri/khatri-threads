@@ -3,8 +3,8 @@ import React from "react";
 import clsx from "clsx";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "danger";
-  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "secondary" | "outline" | "danger" | "unstyled";
+  size?: "sm" | "md" | "lg" | "none";
   href?: string;
 }
 
@@ -14,12 +14,14 @@ const variantStyles = {
   outline:
     "border text-black border-gray-300 hover:bg-primary/10 hover:text-primary hover:border-primary",
   danger: "bg-danger text-white hover:opacity-90",
+  unstyled: "",
 };
 
 const sizeStyles = {
   sm: "py-1.5 px-3 text-sm",
   md: "py-2 px-5 text-sm lg:text-base",
   lg: "py-2 lg:py-3 px-6 text-sm lg:text-base",
+  none: "",
 };
 
 export default function Button({
@@ -31,25 +33,28 @@ export default function Button({
   href,
   ...props
 }: ButtonProps) {
-  const classes = clsx(
-    "inline-flex cursor-pointer gap-2 items-center justify-center rounded-full font-medium transition-all duration-300",
-    "focus:outline-none",
-    "disabled:opacity-50 disabled:cursor-not-allowed",
-    variantStyles[variant],
-    sizeStyles[size],
-    className
-  );
+  const classes =
+    variant === "unstyled" && size === "none"
+      ? className
+      : clsx(
+          "inline-flex cursor-pointer gap-2 items-center justify-center rounded-none font-medium transition-all duration-300",
+          "focus:outline-none",
+          "disabled:opacity-50 disabled:cursor-not-allowed",
+          variantStyles[variant],
+          sizeStyles[size],
+          className
+        );
 
   if (href) {
     return (
-      <Link href={href} className={`${classes}`}>
+      <Link href={href} className={classes}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button disabled={disabled} className={`${classes}`} {...props}>
+    <button disabled={disabled} className={classes} {...props}>
       {children}
     </button>
   );

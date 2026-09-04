@@ -18,6 +18,7 @@ interface FormFieldProps {
   error?: string;
   children: React.ReactNode;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 export function FormField({
@@ -27,7 +28,15 @@ export function FormField({
   error,
   children,
   className,
+  icon,
 }: FormFieldProps) {
+  const control =
+    icon && React.isValidElement<{ className?: string }>(children)
+      ? React.cloneElement(children, {
+          className: cn("pl-11", children.props.className),
+        })
+      : children;
+
   return (
     <div className={cn("space-y-2", className)}>
       {label && (
@@ -37,7 +46,16 @@ export function FormField({
         </label>
       )}
 
-      {children}
+      {icon ? (
+        <div className="relative">
+          <span className="pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 text-muted">
+            {icon}
+          </span>
+          {control}
+        </div>
+      ) : (
+        control
+      )}
 
       {error && <p className="text-sm text-danger">{error}</p>}
     </div>
@@ -58,8 +76,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         type={type}
         className={cn(
           type === "file"
-            ? "w-full rounded-xl border border-gray-200 bg-panel p-2 file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white file:cursor-pointer"
-            : "w-full rounded-xl border border-gray-200 bg-panel px-4 py-3 text-black",
+            ? "w-full rounded-none border border-gray-200 bg-panel p-2 file:mr-4 file:rounded-none file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white file:cursor-pointer"
+            : "w-full rounded-none border border-gray-200 bg-panel px-4 py-3 text-black",
           "placeholder:text-muted",
           "focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -83,7 +101,7 @@ export function Textarea({ className, ...props }: TextareaProps) {
   return (
     <textarea
       className={cn(
-        "w-full rounded-xl border border-gray-200 bg-panel px-4 py-3 text-black",
+        "w-full rounded-none border border-gray-200 bg-panel px-4 py-3 text-black",
         "placeholder:text-muted",
         "focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none",
         "disabled:cursor-not-allowed disabled:opacity-50",
@@ -139,7 +157,7 @@ const selectStyles: StylesConfig<SelectOption, boolean> = {
   control: (base, state) => ({
     ...base,
     minHeight: 48,
-    borderRadius: 12,
+    borderRadius: 0,
     borderColor: state.isFocused ? "var(--primary)" : "#e5e7eb",
     backgroundColor: "white",
     boxShadow: "none",
@@ -164,7 +182,7 @@ const selectStyles: StylesConfig<SelectOption, boolean> = {
 
   menu: (base) => ({
     ...base,
-    borderRadius: 12,
+    borderRadius: 0,
     overflow: "hidden",
     zIndex: 9999,
   }),

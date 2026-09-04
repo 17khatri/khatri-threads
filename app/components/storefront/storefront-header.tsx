@@ -10,6 +10,7 @@ import { useAuth } from "@/app/hooks/use-auth";
 import { useAuthStore } from "@/store/auth-store";
 import { Drawer } from "@/app/components/drawer";
 import { FormField, Input } from "@/app/components/form-fields";
+import Button from "@/app/components/button";
 import type { AuthUser } from "@/types/auth";
 
 type ProfileDraft = Pick<
@@ -52,7 +53,7 @@ export default function StorefrontHeader() {
   const setUser = useAuthStore((state) => state.setUser);
 
   const navigateToCollections = () => {
-    router.push(ROUTES.COLLECTIONS);
+    router.push(ROUTES.SHOP);
     closeMenu();
   };
 
@@ -229,7 +230,7 @@ export default function StorefrontHeader() {
         </div>
 
         <div className="flex items-center gap-5 md:hidden">
-          <button
+          <Button variant="unstyled" size="none"
             type="button"
             aria-label="Open menu"
             aria-expanded={isMenuVisible}
@@ -237,7 +238,7 @@ export default function StorefrontHeader() {
             className="hover:text-primary"
           >
             <FiMenu size={20} />
-          </button>
+          </Button>
         </div>
 
         <Link
@@ -249,7 +250,7 @@ export default function StorefrontHeader() {
 
         <div className="flex items-center gap-4 text-slate-900 sm:gap-6">
           <div ref={accountMenuRef} className="relative flex">
-            <button
+            <Button variant="unstyled" size="none"
               type="button"
               aria-label="Account"
               aria-expanded={user ? isAccountMenuOpen : undefined}
@@ -259,40 +260,40 @@ export default function StorefrontHeader() {
               className="cursor-pointer hover:text-primary"
             >
               <FiUser size={20} />
-            </button>
+            </Button>
 
             {isAccountMenuOpen && (
               <div
                 role="menu"
                 aria-label="Account options"
-                className="absolute right-0 top-full z-20 mt-3 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+                className="absolute right-0 top-full z-20 mt-3 w-40 rounded-none border border-slate-200 bg-white py-1 shadow-lg"
               >
-                <button
+                <Button variant="unstyled" size="none"
                   type="button"
                   role="menuitem"
                   onClick={openProfileDrawer}
                   className="block w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-slate-50 hover:text-primary"
                 >
                   View profile
-                </button>
-                <button
+                </Button>
+                <Button variant="unstyled" size="none"
                   type="button"
                   role="menuitem"
                   onClick={handleLogout}
                   className="block w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-slate-50 hover:text-primary"
                 >
                   Logout
-                </button>
+                </Button>
               </div>
             )}
           </div>
-          <button
+          <Button variant="unstyled" size="none"
             type="button"
             aria-label="Shopping bag, 1 item"
             className="relative hover:text-primary cursor-pointer"
           >
             <FiShoppingCart size={21} />
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -304,7 +305,7 @@ export default function StorefrontHeader() {
         {profileUser || user ? (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
+              <div className="flex h-14 w-14 items-center justify-center rounded-none bg-primary/10 text-xl font-semibold text-primary">
                 {(profileUser || user)?.firstName[0]?.toUpperCase() || "U"}
               </div>
               <div className="min-w-0 flex-1">
@@ -313,19 +314,19 @@ export default function StorefrontHeader() {
                 </p>
               </div>
               {!isEditingProfile && (
-                <button
+                <Button variant="unstyled" size="none"
                   type="button"
                   onClick={startEditingProfile}
-                  className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:border-primary hover:text-primary"
+                  className="inline-flex items-center gap-2 rounded-none border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:border-primary hover:text-primary"
                 >
                   <FiEdit2 size={16} />
                   Edit
-                </button>
+                </Button>
               )}
             </div>
 
             {profileError && (
-              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <p className="rounded-none border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                 {profileError}
               </p>
             )}
@@ -343,7 +344,7 @@ export default function StorefrontHeader() {
                 onSubmit={saveProfile}
               />
             ) : (
-              <dl className="divide-y divide-slate-100 rounded-lg border border-slate-200">
+              <dl className="divide-y divide-slate-100 rounded-none border border-slate-200">
                 <ProfileDetail label="First name" value={(profileUser || user)?.firstName} />
                 <ProfileDetail label="Last name" value={(profileUser || user)?.lastName} />
                 <ProfileDetail label="Email" value={(profileUser || user)?.email} />
@@ -363,7 +364,7 @@ export default function StorefrontHeader() {
       {isMenuMounted &&
         createPortal(
           <div className="fixed inset-0 z-50 md:hidden">
-            <button
+            <Button variant="unstyled" size="none"
               type="button"
               aria-label="Close menu"
               className={`absolute inset-0 z-0 bg-black/30 transition-opacity duration-200 ${
@@ -380,13 +381,13 @@ export default function StorefrontHeader() {
                 <span className="text-lg font-bold tracking-tight">
                   Khatri Threads
                 </span>
-                <button
+                <Button variant="unstyled" size="none"
                   type="button"
                   aria-label="Close menu"
                   onClick={closeMenu}
                 >
                   <FiX size={22} />
-                </button>
+                </Button>
               </div>
               <nav className="mt-12 flex flex-col  border-slate-100">
                 <a
@@ -457,21 +458,21 @@ function ProfileForm({
         ))}
       </div>
       <div className="flex justify-end gap-3">
-        <button
+        <Button variant="unstyled" size="none"
           type="button"
           onClick={onCancel}
           disabled={isSaving}
-          className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          className="rounded-none px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button variant="unstyled" size="none"
           type="submit"
           disabled={isSaving}
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-none bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSaving ? "Saving..." : "Save changes"}
-        </button>
+        </Button>
       </div>
     </form>
   );

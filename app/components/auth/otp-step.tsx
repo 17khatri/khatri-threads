@@ -27,18 +27,18 @@ export function OtpStep({
 }: OtpStepProps) {
   return (
     <form className="space-y-5" onSubmit={onSubmit}>
-      <div className="rounded-2xl border border-line bg-background p-4">
+      <div className="rounded-none border border-line bg-background p-4">
         <p className="text-sm text-muted">OTP sent to</p>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
           <strong className="break-all text-sm text-black">{email}</strong>
-          <button
+          <Button variant="unstyled" size="none"
             type="button"
             onClick={onChangeEmail}
             className="text-sm font-semibold text-primary hover:underline"
             disabled={isLoading}
           >
             Change Email
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -71,7 +71,7 @@ export function OtpStep({
         {isLoading ? "Verifying..." : "Verify OTP"}
       </Button>
 
-      <button
+      <Button variant="unstyled" size="none"
         type="button"
         onClick={onResend}
         disabled={isLoading || resendCountdown > 0}
@@ -81,7 +81,7 @@ export function OtpStep({
         {resendCountdown > 0
           ? `Resend OTP in ${resendCountdown}s`
           : "Resend OTP"}
-      </button>
+      </Button>
     </form>
   );
 }

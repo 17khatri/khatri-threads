@@ -9,7 +9,7 @@ interface AuthCardProps {
 
 export function AuthCard({ title, subtitle, children }: AuthCardProps) {
   return (
-    <div className="max-w-6xl overflow-hidden rounded-3xl bg-panel shadow-2xl">
+    <div className="max-w-6xl overflow-hidden rounded-none bg-panel shadow-2xl">
       <section className="flex items-center justify-center p-5 sm:p-8 lg:p-10">
         <div className="w-full max-w-xl">
           <div className="mb-8 text-center">

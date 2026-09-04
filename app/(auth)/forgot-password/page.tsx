@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import type { UseFormReturn } from "react-hook-form";
-import { FiCheck, FiKey, FiLock, FiMail, FiRotateCcw, FiShield } from "react-icons/fi";
+import {
+  FiCheck,
+  FiKey,
+  FiLock,
+  FiMail,
+  FiRotateCcw,
+  FiShield,
+} from "react-icons/fi";
 
 import { AuthCard } from "@/app/components/auth/auth-card";
 import Button from "@/app/components/button";
@@ -51,20 +58,20 @@ function ForgotPasswordProgress({
           <div
             key={step}
             className={cn(
-              "rounded-2xl border p-3 text-center",
+              "border p-3 text-center",
               isActive || isComplete
                 ? "border-primary bg-primary/10"
-                : "border-line bg-background",
+                : "border-line bg-background"
             )}
           >
             <div
               className={cn(
-                "mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full",
+                "mx-auto mb-2 flex h-9 w-9 items-center justify-center",
                 isComplete
                   ? "bg-success text-white"
                   : isActive
-                    ? "bg-primary text-white"
-                    : "bg-white text-muted",
+                  ? "bg-primary text-white"
+                  : "bg-white text-muted"
               )}
             >
               {isComplete ? <FiCheck size={18} /> : <Icon size={18} />}
@@ -141,18 +148,18 @@ function ForgotOtpStep({
 }) {
   return (
     <form className="space-y-5" onSubmit={onSubmit}>
-      <div className="rounded-2xl border border-line bg-background p-4">
+      <div className="border border-line bg-background p-4">
         <p className="text-sm text-muted">OTP sent to</p>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
           <strong className="break-all text-sm text-black">{email}</strong>
-          <button
+          <Button variant="unstyled" size="none"
             type="button"
             onClick={onChangeEmail}
             className="text-sm font-semibold text-primary hover:underline"
             disabled={isLoading}
           >
             Change Email
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -185,7 +192,7 @@ function ForgotOtpStep({
         {isLoading ? "Verifying..." : "Verify OTP"}
       </Button>
 
-      <button
+      <Button variant="unstyled" size="none"
         type="button"
         onClick={onResend}
         disabled={isLoading || resendCountdown > 0}
@@ -195,7 +202,7 @@ function ForgotOtpStep({
         {resendCountdown > 0
           ? `Resend OTP in ${resendCountdown}s`
           : "Resend OTP"}
-      </button>
+      </Button>
     </form>
   );
 }
@@ -278,13 +285,13 @@ export default function ForgotPasswordPage() {
         <ForgotPasswordProgress currentStep={forgotPassword.step} />
 
         {forgotPassword.error && (
-          <div className="mb-5 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
+          <div className="mb-5 border border-danger/20 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
             {forgotPassword.error}
           </div>
         )}
 
         {forgotPassword.successMessage && (
-          <div className="mb-5 rounded-2xl border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">
+          <div className="mb-5 border border-success/20 bg-success/10 px-4 py-3 text-sm font-semibold text-success">
             {forgotPassword.successMessage}
           </div>
         )}
@@ -294,7 +301,7 @@ export default function ForgotPasswordPage() {
             form={forgotPassword.emailForm}
             isLoading={forgotPassword.loadingAction === "send-otp"}
             onSubmit={forgotPassword.emailForm.handleSubmit(
-              forgotPassword.sendOtp,
+              forgotPassword.sendOtp
             )}
           />
         )}
@@ -309,7 +316,7 @@ export default function ForgotPasswordPage() {
             }
             resendCountdown={forgotPassword.resendCountdown}
             onSubmit={forgotPassword.otpForm.handleSubmit(
-              forgotPassword.verifyOtp,
+              forgotPassword.verifyOtp
             )}
             onResend={forgotPassword.resendOtp}
             onChangeEmail={forgotPassword.changeEmail}
@@ -321,7 +328,7 @@ export default function ForgotPasswordPage() {
             form={forgotPassword.resetForm}
             isLoading={forgotPassword.loadingAction === "reset"}
             onSubmit={forgotPassword.resetForm.handleSubmit(
-              forgotPassword.resetPassword,
+              forgotPassword.resetPassword
             )}
           />
         )}

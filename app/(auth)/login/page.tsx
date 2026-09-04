@@ -29,7 +29,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex max-w-6xl overflow-hidden rounded-3xl bg-panel shadow-2xl items-center justify-center px-4">
+    <div className="flex max-w-6xl overflow-hidden bg-panel shadow-2xl items-center justify-center px-4">
       <div className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
           <div className="mb-8 text-center">

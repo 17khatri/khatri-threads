@@ -15,7 +15,7 @@ export default function Page() {
   const [products, setProducts] = useState<StorefrontProductCardData[]>([]);
 
   const navigateToCollections = () => {
-    router.push(ROUTES.COLLECTIONS);
+    router.push(ROUTES.SHOP);
   };
 
   useEffect(() => {
