@@ -90,6 +90,30 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Categories
               </Link>
               <Link
+                href={ROUTES.ADMIN_COLORS}
+                onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-none transition-colors duration-300 ${
+                  pathname === ROUTES.ADMIN_COLORS
+                    ? "bg-primary/60"
+                    : "hover:bg-primary/60"
+                }`}
+              >
+                <FiBarChart2 size={18} />
+                Colors
+              </Link>
+              <Link
+                href={ROUTES.ADMIN_CUSTOMIZER_PRODUCTS}
+                onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-none transition-colors duration-300 ${
+                  pathname === ROUTES.ADMIN_CUSTOMIZER_PRODUCTS
+                    ? "bg-primary/60"
+                    : "hover:bg-primary/60"
+                }`}
+              >
+                <FiPackage size={18} />
+                Customizer Products
+              </Link>
+              <Link
                 href={ROUTES.ADMIN_COLLECTIONS}
                 onClick={onClose}
                 className={`flex items-center gap-3 px-4 py-3 rounded-none transition-colors duration-300 ${

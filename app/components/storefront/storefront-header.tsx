@@ -226,6 +226,9 @@ export default function StorefrontHeader() {
             <a onClick={navigateToCollections} className="hover:text-primary">
               Shop
             </a>
+            <Link href={ROUTES.CUSTOMIZE} className="hover:text-primary">
+              Customize
+            </Link>
           </nav>
         </div>
 
@@ -397,6 +400,9 @@ export default function StorefrontHeader() {
                 >
                   Shop
                 </a>
+                <Link href={ROUTES.CUSTOMIZE} onClick={closeMenu} className="py-5 text-lg font-medium">
+                  Customize
+                </Link>
               </nav>
             </aside>
           </div>,
