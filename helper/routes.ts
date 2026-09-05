@@ -7,6 +7,9 @@ const ROUTES = {
   SHOP: "/products",
   ADMIN_COLLECTIONS: "/admin/collections",
   PRODUCTS: "/admin/products",
+  ADMIN_COLORS: "/admin/colors",
+  ADMIN_CUSTOMIZER_PRODUCTS: "/admin/customizer-products",
+  CUSTOMIZE: "/customize",
 
   // Authentication
   LOGIN: "/login",
@@ -33,6 +36,9 @@ export const PAGE_TITLES: Record<string, string> = {
   [ROUTES.SHOP]: "Products",
   [ROUTES.ADMIN_COLLECTIONS]: "Collections",
   [ROUTES.PRODUCTS]: "Products",
+  [ROUTES.ADMIN_COLORS]: "Colors",
+  [ROUTES.ADMIN_CUSTOMIZER_PRODUCTS]: "Customizer Products",
+  [ROUTES.CUSTOMIZE]: "Customize T-Shirt",
 };
 
 export default ROUTES;

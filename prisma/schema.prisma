@@ -49,9 +49,44 @@ model Category {
   products         Product[]
   productVariants  ProductCategory[]
   productImages    ProductImage[]
+  customizerProducts CustomizerProduct[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Color {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  hexCode  String
+  isActive Boolean @default(true)
+
+  customizerProducts CustomizerProduct[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomizerProduct {
+  id String @id @default(cuid())
+
+  categoryId String
+  colorId    String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  color      Color    @relation(fields: [colorId], references: [id], onDelete: Restrict)
+
+  frontImageUrl     String
+  frontStoragePath  String?
+  backImageUrl      String
+  backStoragePath   String?
+  isActive          Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([categoryId, colorId])
+  @@index([categoryId, isActive])
+  @@index([colorId, isActive])
 }
 
 model Collection {
