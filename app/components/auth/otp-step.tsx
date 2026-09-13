@@ -31,7 +31,9 @@ export function OtpStep({
         <p className="text-sm text-muted">OTP sent to</p>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
           <strong className="break-all text-sm text-black">{email}</strong>
-          <Button variant="unstyled" size="none"
+          <Button
+            variant="unstyled"
+            size="none"
             type="button"
             onClick={onChangeEmail}
             className="text-sm font-semibold text-primary hover:underline"
@@ -60,7 +62,28 @@ export function OtpStep({
             autoComplete="one-time-code"
             maxLength={6}
             placeholder="000000"
-            className="pl-11 tracking-[0.35em]"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("otp")}
           />
@@ -71,7 +94,9 @@ export function OtpStep({
         {isLoading ? "Verifying..." : "Verify OTP"}
       </Button>
 
-      <Button variant="unstyled" size="none"
+      <Button
+        variant="unstyled"
+        size="none"
         type="button"
         onClick={onResend}
         disabled={isLoading || resendCountdown > 0}

@@ -32,7 +32,28 @@ export function EmailStep({ form, isLoading, onSubmit }: EmailStepProps) {
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
-            className="pl-11"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("email")}
           />

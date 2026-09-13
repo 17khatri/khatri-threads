@@ -51,7 +51,7 @@ export function RegistrationDetails({
     Boolean(confirmPassword) &&
     password === confirmPassword;
   const completedRequirements = passwordRequirements.filter(
-    (requirement) => requirement.isMet
+    (requirement) => requirement.isMet,
   ).length;
   const hasStrongPassword =
     completedRequirements === passwordRequirements.length;
@@ -67,6 +67,28 @@ export function RegistrationDetails({
         >
           <Input
             id="first-name"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             autoComplete="given-name"
             placeholder="First name"
             disabled={isLoading}
@@ -82,6 +104,28 @@ export function RegistrationDetails({
         >
           <Input
             id="last-name"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             autoComplete="family-name"
             placeholder="Last name"
             disabled={isLoading}
@@ -108,7 +152,28 @@ export function RegistrationDetails({
             autoComplete="tel"
             maxLength={10}
             placeholder="10 digit phone number"
-            className="pl-11"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("phone")}
           />
@@ -142,11 +207,34 @@ export function RegistrationDetails({
               autoComplete="new-password"
               aria-describedby="password-guide"
               placeholder="Create password"
-              className="pl-11 pr-12"
+              className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
               disabled={isLoading}
               {...form.register("password")}
             />
-            <Button variant="unstyled" size="none"
+            <Button
+              variant="unstyled"
+              size="none"
               type="button"
               onClick={() => setShowPassword((value) => !value)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-muted"
@@ -168,6 +256,28 @@ export function RegistrationDetails({
             type={passwordInputType}
             autoComplete="new-password"
             placeholder="Confirm password"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("confirmPassword")}
           />
@@ -278,6 +388,28 @@ export function RegistrationDetails({
             id="address"
             autoComplete="street-address"
             placeholder="Address"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("address")}
           />
@@ -292,6 +424,28 @@ export function RegistrationDetails({
             id="city"
             autoComplete="address-level2"
             placeholder="City"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("city")}
           />
@@ -306,6 +460,28 @@ export function RegistrationDetails({
             id="state"
             autoComplete="address-level1"
             placeholder="State"
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             disabled={isLoading}
             {...form.register("state")}
           />
@@ -321,6 +497,28 @@ export function RegistrationDetails({
             inputMode="numeric"
             autoComplete="postal-code"
             maxLength={6}
+            className="
+                    border
+                    border-white/40
+
+                    bg-white/10
+
+                    text-[#fffaf2]
+
+                    placeholder:text-white/60
+
+                    backdrop-blur-sm
+
+                    focus:border-[#e4b54f]
+
+                    focus:bg-white/15
+
+                    focus:ring-2
+                    focus:ring-[#e4b54f]/30
+
+                    transition-all
+                    duration-200
+                  "
             placeholder="Pincode"
             disabled={isLoading}
             {...form.register("pincode")}
