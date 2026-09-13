@@ -11,7 +11,7 @@ const socialLinks = [
     href: "https://wa.me/918347407099",
     content: <FaWhatsapp size={19} />,
   },
-  { label: "Facebook", content: <FaFacebook size={19} /> },
+  // { label: "Facebook", content: <FaFacebook size={19} /> },
 ];
 
 export default function StorefrontFooter() {

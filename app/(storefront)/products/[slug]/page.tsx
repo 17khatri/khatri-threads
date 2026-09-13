@@ -47,9 +47,9 @@ export default function ProductDetailPage() {
   const images = useMemo(
     () =>
       product?.images.filter(
-        (image) => image.categoryId === selectedCategoryId
+        (image) => image.categoryId === selectedCategoryId,
       ) ?? [],
-    [product, selectedCategoryId]
+    [product, selectedCategoryId],
   );
   if (error)
     return (
@@ -70,7 +70,7 @@ export default function ProductDetailPage() {
       </main>
     );
   const selectedCategory = product.categories.find(
-    (item) => item.categoryId === selectedCategoryId
+    (item) => item.categoryId === selectedCategoryId,
   )?.category;
   return (
     <main className="wide-shell mx-auto py-6 sm:py-10 lg:py-12">
@@ -121,7 +121,9 @@ export default function ProductDetailPage() {
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {product.categories.map((item) => (
-                <Button variant="unstyled" size="none"
+                <Button
+                  variant="unstyled"
+                  size="none"
                   key={item.categoryId}
                   type="button"
                   onClick={() => {
@@ -139,7 +141,7 @@ export default function ProductDetailPage() {
                 </Button>
               ))}
             </div>
-            <div className="mt-7 flex gap-3">
+            {/* <div className="mt-7 flex gap-3">
               <div className="flex h-[52px] min-w-32 items-center justify-between border border-black/15 px-3">
                 <Button variant="unstyled" size="none"
                   type="button"
@@ -170,7 +172,7 @@ export default function ProductDetailPage() {
               >
                 {added ? "Added to cart" : "Add to cart"}
               </Button>
-            </div>
+            </div> */}
             {added && (
               <p className="mt-3 text-sm text-success" role="status">
                 {quantity} item{quantity > 1 ? "s" : ""} added to your cart.
